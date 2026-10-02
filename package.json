@@ -1,0 +1,9 @@
+{
+  "name": "hanja-defense-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.cjs",
+    "test": "node --test tools/build.test.cjs"
+  }
+}

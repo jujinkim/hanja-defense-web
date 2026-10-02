@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#29252b">
+  <title>HanjaDefense · Web Demo</title>
+  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.icon.png" />
+<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.apple-touch-icon.png"/>
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #29252b; color: #fff5df; font: 16px system-ui, sans-serif; }
+    #canvas { position: fixed; display: block; touch-action: none; outline: none; }
+    #toolbar { position: fixed; z-index: 2; inset: 0 0 auto; height: calc(44px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left)); display: flex; align-items: center; gap: 10px; background: #29252b; font-size: 12px; }
+    #toolbar span { flex: 1; }
+    button { min-height: 44px; padding: 8px 18px; border: 1px solid #ead4a1; border-radius: 6px; background: #e6bd60; color: #211e25; font: inherit; cursor: pointer; }
+    button:focus-visible { outline: 3px solid white; outline-offset: -3px; }
+    button:disabled { opacity: .6; cursor: wait; }
+    #fullscreen { min-height: 36px; padding: 3px 10px; }
+    #overlay { position: fixed; z-index: 3; inset: 0; display: grid; place-items: center; padding: 24px; background: #29252bf2; }
+    #overlay[hidden], [hidden] { display: none !important; }
+    #card { width: min(440px,100%); text-align: center; }
+    #icon { width: 112px; height: 112px; border-radius: 24px; }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    p { line-height: 1.5; }
+    #status { white-space: pre-wrap; overflow-wrap: anywhere; }
+    progress { width: 100%; height: 14px; margin-bottom: 18px; accent-color: #e6bd60; }
+    #storage { position: fixed; z-index: 2; left: max(8px,env(safe-area-inset-left)); right: max(8px,env(safe-area-inset-right)); bottom: max(8px,env(safe-area-inset-bottom)); margin: 0; padding: 8px; border-radius: 6px; background: #563a18; font-size: 12px; }
+    #insets { position: fixed; visibility: hidden; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" tabindex="0" aria-label="HanjaDefense game"></canvas>
+  <div id="toolbar"><span>HanjaDefense · Demo</span><button id="fullscreen" type="button">Fullscreen</button></div>
+  <p id="storage" role="status" hidden></p><div id="insets"></div>
+  <div id="overlay"><main id="card">
+    <img id="icon" src="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.icon.png" alt="">
+    <h1>HanjaDefense</h1><p id="description"></p>
+    <p id="status" role="status" aria-live="polite"></p><progress id="progress" hidden></progress>
+    <button id="start" type="button">Start demo</button>
+  </main></div>
+  <script src="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/manifest.json" data-sha256="e05316647e78ee6ace6e760a5e6155c66f1cd81cf0940470ed57462fb7c21cb0"></script>
+  <script src="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
+  <script>
+  (() => {
+    'use strict';
+    const language = (navigator.language || 'en').slice(0,2);
+    const strings = {
+      ko: ['데모 시작','일반 난이도 · 30웨이브 · 합성 퀴즈','불러오는 중…','실행하지 못했습니다. WebGL 2를 지원하는 최신 브라우저에서 다시 시도해 주세요.','다시 시도','전체 화면','이 브라우저에서는 저장을 유지할 수 없습니다. 새로고침하면 진행이 사라집니다.','전체 화면을 사용할 수 없습니다. 브라우저 메뉴에서 화면을 확장해 주세요.'],
+      ja: ['デモを開始','標準難易度 · 30ウェーブ · 合成クイズ','読み込み中…','起動できませんでした。WebGL 2対応の最新ブラウザーで再試行してください。','再試行','全画面','このブラウザーでは保存を保持できません。再読み込みすると進行が失われます。','全画面は利用できません。ブラウザーのメニューで画面を拡大してください。'],
+      en: ['Start demo','Normal difficulty · 30 waves · Synthesis quizzes','Loading…','Could not start. Please retry in an up-to-date browser with WebGL 2 support.','Retry','Fullscreen','Browser storage is unavailable. Refreshing will lose this session’s progress.','Fullscreen is unavailable. Use your browser’s expand controls.']
+    }[language] || ['Start demo','Normal difficulty · 30 waves · Synthesis quizzes','Loading…','Could not start. Please retry in an up-to-date browser with WebGL 2 support.','Retry','Fullscreen','Browser storage is unavailable. Refreshing will lose this session’s progress.','Fullscreen is unavailable. Use your browser’s expand controls.'];
+    document.documentElement.lang = ['ko','ja'].includes(language) ? language : 'en';
+    const canvas = document.getElementById('canvas'), overlay = document.getElementById('overlay');
+    const start = document.getElementById('start'), status = document.getElementById('status'), progress = document.getElementById('progress');
+    const storage = document.getElementById('storage'), fullscreen = document.getElementById('fullscreen');
+    start.textContent = strings[0]; document.getElementById('description').textContent = strings[1]; fullscreen.textContent = strings[5];
+    let lifecycle = null, failed = false;
+    // Godot policy 0: this shell owns both CSS pixels and the backing buffer.
+    function layoutCanvas() {
+      const insets = getComputedStyle(document.getElementById('insets'));
+      const viewport = window.visualViewport;
+      const x = viewport ? viewport.offsetLeft : 0, y = viewport ? viewport.offsetTop : 0;
+      const width = viewport ? viewport.width : innerWidth, height = viewport ? viewport.height : innerHeight;
+      const left = x + (parseFloat(insets.paddingLeft) || 0);
+      const right = x + width - (parseFloat(insets.paddingRight) || 0);
+      const top = Math.max(y + (parseFloat(insets.paddingTop) || 0), document.getElementById('toolbar').getBoundingClientRect().bottom);
+      const bottom = Math.min(y + height - (parseFloat(insets.paddingBottom) || 0), storage.hidden ? Infinity : storage.getBoundingClientRect().top - 4);
+      const scale = Math.max(0, Math.min((right - left) / 420, (bottom - top) / 780));
+      const w = 420 * scale, h = 780 * scale;
+      canvas.style.left = (left + (right - left - w) / 2) + 'px';
+      canvas.style.top = (top + (bottom - top - h) / 2) + 'px';
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      // Integer 7:13 buffers avoid tiny internal bars after pixel rounding.
+      const unit = Math.max(1, Math.round(h * (window.devicePixelRatio || 1) / 13));
+      if (canvas.width !== unit * 7) canvas.width = unit * 7;
+      if (canvas.height !== unit * 13) canvas.height = unit * 13;
+    }
+    const observed = new ResizeObserver(layoutCanvas);
+    for (const node of [document.documentElement, document.getElementById('toolbar'), storage]) observed.observe(node);
+    window.addEventListener('resize', layoutCanvas);
+    document.addEventListener('fullscreenchange', layoutCanvas);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', layoutCanvas);
+      window.visualViewport.addEventListener('scroll', layoutCanvas);
+    }
+    function watchDensity() {
+      const query = matchMedia('(resolution: ' + (window.devicePixelRatio || 1) + 'dppx)');
+      query.addEventListener('change', () => { layoutCanvas(); watchDensity(); }, {once:true});
+    }
+    watchDensity();
+    layoutCanvas();
+    const visibility = () => { if (lifecycle) lifecycle(document.hidden); if (document.hidden && window.speechSynthesis) window.speechSynthesis.cancel(); };
+    window.HanjaShell = Object.freeze({
+      setLifecycle(callback) { lifecycle = callback; visibility(); },
+      storageStatus(persistent) { storage.textContent = strings[6]; storage.hidden = !!persistent; layoutCanvas(); },
+      safeRect() {
+        const rect = canvas.getBoundingClientRect();
+        return JSON.stringify({x:0, y:0, width:rect.width, height:rect.height, windowWidth:rect.width, windowHeight:rect.height});
+      }
+    });
+    document.addEventListener('visibilitychange', visibility);
+    window.addEventListener('pagehide', () => { if (lifecycle) lifecycle(true); if (window.speechSynthesis) window.speechSynthesis.cancel(); });
+    window.addEventListener('pageshow', visibility);
+    fullscreen.addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+        else throw new Error('unsupported');
+        canvas.focus();
+      } catch (_) { fullscreen.title = strings[7]; fullscreen.textContent = strings[7]; }
+    });
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index","experimentalVK":false,"fileSizes":{"index.pck":10991600,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    config.canvasResizePolicy = 0;
+    function fail(error) {
+      failed = true; overlay.hidden = false; start.disabled = false; start.textContent = strings[4];
+      progress.hidden = true; status.textContent = strings[3]; console.error(error);
+    }
+    start.addEventListener('click', async () => {
+      if (failed) { location.reload(); return; }
+      start.disabled = true; status.textContent = strings[2]; progress.hidden = false;
+      try {
+        const missing = Engine.getMissingFeatures({threads:false});
+        if (missing.length) throw new Error(missing.join(', '));
+        layoutCanvas();
+        const options = {canvas, onProgress(current,total) {
+          if (total > 0) { progress.max = total; progress.value = current; } else progress.removeAttribute('value');
+        }, onExit(code) { if (code !== 0) fail(new Error('Engine exited: ' + code)); }};
+        if (window.HanjaPages) await window.HanjaPages.start(config, options);
+        else await new Engine(config).startGame(options);
+        layoutCanvas();
+        overlay.hidden = true; canvas.focus();
+      } catch (error) { fail(error); }
+    });
+  })();
+  </script>
+</body>
+</html>
+

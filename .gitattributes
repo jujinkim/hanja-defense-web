@@ -1,0 +1,3 @@
+public/** linguist-generated=true
+# Preserve the verified Godot shell bytes, including the exporter's final blank line.
+public/play.html whitespace=-blank-at-eof

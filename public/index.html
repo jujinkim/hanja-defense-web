@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#191c1a">
+  <meta name="description" content="한자를 합쳐 타워를 만들고, 30웨이브의 길을 지켜 보세요. 한자디펜스 웹 데모를 브라우저에서 플레이할 수 있습니다.">
+  <title>한자디펜스 — 브라우저에서 플레이</title>
+  <link rel="icon" href="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.icon.png">
+  <style>
+    :root { color-scheme: dark; --bg:#191c1a; --panel:#222622; --ink:#f4eee0; --muted:#b7bcb0; --gold:#e6bd60; --line:#454b41; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:inherit; }
+    a:focus-visible, iframe:focus-visible { outline:3px solid var(--gold); outline-offset:5px; }
+    .skip { position:absolute; left:16px; top:-80px; padding:10px 18px; z-index:3; background:var(--gold); color:var(--bg); }
+    .skip:focus { top:12px; }
+    .site-header { max-width:1320px; margin:auto; min-height:96px; padding:24px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:700; font-size:15px; letter-spacing:.1em; }
+    .brand img { width:38px; height:38px; border-radius:9px; }
+    .brand small { display:block; font-size:11px; letter-spacing:.18em; line-height:1.3; font-weight:500; color:var(--muted); }
+    nav { display:flex; gap:28px; font-size:14px; }
+    nav a { text-decoration:none; padding:8px 0; color:var(--muted); }
+    nav a:hover { color:var(--gold); }
+    main { max-width:1240px; margin:20px auto 64px; padding:0 40px; }
+    .game-layout { display:grid; grid-template-columns:minmax(180px,1fr) minmax(280px,420px) minmax(180px,1fr); gap:48px; align-items:center; }
+    .eyebrow { margin:0 0 18px; color:var(--gold); font-size:12px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; }
+    h1 { margin:0; font-size:clamp(36px,3.6vw,50px); font-weight:650; letter-spacing:-.055em; line-height:1.3; word-break:keep-all; }
+    .lead { color:var(--muted); margin:24px 0 0; word-break:keep-all; }
+    .recipe { display:flex; align-items:center; gap:9px; margin:32px 0; }
+    .glyph { width:52px; height:64px; display:grid; place-items:center; border:1px solid #747561; border-radius:3px; background:#ece2c9; color:#282923; font:34px/1 "Songti SC","Batang",serif; }
+    .glyph.result { color:var(--gold); border-color:var(--gold); background:transparent; }
+    .operator { font-size:17px; color:var(--muted); }
+    .demo-notes { margin:26px 0 0; padding:0; list-style:none; color:var(--muted); font-size:14px; }
+    .demo-notes li { border-top:1px solid var(--line); padding:10px 0; }
+    .demo-notes li:last-child { border-bottom:1px solid var(--line); }
+    .player-section { min-width:0; scroll-margin-top:20px; }
+    .player-label { display:flex; justify-content:space-between; align-items:center; gap:16px; margin:0 0 13px; color:var(--muted); font-size:12px; letter-spacing:.12em; }
+    .player-label strong { color:var(--gold); font-weight:500; letter-spacing:.02em; }
+    .player { width:100%; aspect-ratio:420/824; overflow:hidden; border:1px solid #8b7951; border-radius:12px; background:#29252b; box-shadow:0 24px 70px #0006; }
+    iframe { display:block; width:100%; height:100%; border:0; }
+    .play-note { margin:14px 0 0; color:var(--muted); font-size:13px; text-align:center; }
+    .details { min-width:0; }
+    h2 { margin:0 0 14px; font-size:22px; font-weight:600; letter-spacing:-.025em; word-break:keep-all; }
+    .details p { margin:0; color:var(--muted); word-break:keep-all; }
+    .instructions { margin:0 0 38px; padding:0; list-style:none; counter-reset:steps; }
+    .instructions li { counter-increment:steps; display:flex; align-items:flex-start; gap:13px; margin:17px 0; color:var(--muted); font-size:14px; word-break:keep-all; }
+    .instructions li::before { content:counter(steps,decimal-leading-zero); color:var(--gold); font-size:12px; line-height:1.95; }
+    .stores { padding-top:28px; border-top:1px solid var(--line); scroll-margin-top:24px; }
+    .stores p { font-size:14px; }
+    .store-list { display:grid; gap:10px; margin-top:20px; }
+    .store-link { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px; min-height:54px; border:1px solid var(--line); border-radius:6px; text-decoration:none; background:var(--panel); font-size:14px; }
+    .store-state { color:var(--muted); font-size:12px; white-space:nowrap; }
+    a.store-link:hover { border-color:var(--gold); }
+    footer { max-width:1240px; margin:auto; padding:22px 40px 30px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:20px; color:var(--muted); font-size:12px; }
+    @media(min-width:981px) and (min-height:900px) { main { margin-top:32px; } }
+    @media(max-width:1100px) { .game-layout { gap:28px; } main { padding:0 24px; } }
+    @media(max-width:980px) {
+      .site-header { min-height:80px; padding:18px 24px; }
+      main { max-width:640px; margin:18px auto 48px; }
+      .game-layout { grid-template-columns:minmax(0,1fr); gap:32px; }
+      .intro { text-align:center; }
+      .eyebrow { margin-bottom:10px; }
+      h1 { font-size:36px; }
+      .lead { margin:15px auto 0; max-width:430px; }
+      .recipe, .demo-notes { display:none; }
+      .player-section { width:100%; max-width:420px; justify-self:center; }
+      .details { max-width:420px; width:100%; justify-self:center; }
+      footer { padding:22px 24px; }
+    }
+    @media(max-width:460px) {
+      .site-header { padding:16px; gap:12px; }
+      .brand { gap:8px; font-size:13px; }
+      .brand img { width:32px; height:32px; }
+      nav { gap:14px; font-size:13px; }
+      main { padding:0 16px; }
+      h1 { font-size:32px; }
+      .lead { font-size:15px; }
+      footer { flex-direction:column; gap:6px; padding:20px 16px; }
+    }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#play" data-i18n="skip">게임으로 바로 가기</a>
+  <header class="site-header">
+    <div class="brand"><img src="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.icon.png" alt="" width="38" height="38"><span>HANJA DEFENSE<small>GODDINNER</small></span></div>
+    <nav aria-label="페이지 메뉴" data-label="navigation"><a href="#play" data-i18n="playNav">플레이</a><a href="#stores" data-i18n="storeNav">스토어</a></nav>
+  </header>
+  <main>
+    <div class="game-layout">
+      <section class="intro" aria-labelledby="title">
+        <p class="eyebrow" data-i18n="genre">한자 합성 · 타워 디펜스</p>
+        <h1 id="title" data-i18n="title">한자를 합치고,<br>길을 지켜요.</h1>
+        <p class="lead" data-i18n="lead">작은 한자들이 만나 새로운 힘이 됩니다. 타워를 배치하고 합성하며 30웨이브를 막아 보세요.</p>
+        <div class="recipe" role="img" aria-label="날 일과 달 월을 합쳐 밝을 명" data-label="recipe"><span class="glyph">日</span><span class="operator">+</span><span class="glyph">月</span><span class="operator">=</span><span class="glyph result">明</span></div>
+        <ul class="demo-notes"><li data-i18n="scope">한국어 8급 · 일본어 N5 데모</li><li data-i18n="quiz">합성 퀴즈로 읽기와 뜻을 익혀요</li><li data-i18n="free">설치 없이 브라우저에서 플레이</li></ul>
+      </section>
+      <section class="player-section" id="play" aria-label="플레이 가능한 웹 데모" data-label="player">
+        <div class="player-label"><span>WEB DEMO</span><strong data-i18n="demoMode">일반 난이도 · 30웨이브</strong></div>
+        <div class="player"><iframe id="game-frame" src="play.html" title="한자디펜스 웹 데모" allow="fullscreen; autoplay" allowfullscreen></iframe></div>
+        <p class="play-note" data-i18n="playNote">화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.</p>
+      </section>
+      <aside class="details">
+        <section aria-labelledby="how-title">
+          <h2 id="how-title" data-i18n="howTitle">한 글자씩, 더 강하게.</h2>
+          <ol class="instructions"><li data-i18n="stepOne">손에 든 한자를 맵에 배치해 몰려오는 적을 막아요.</li><li data-i18n="stepTwo">한자를 합성해 새로운 타워를 만들어요.</li><li data-i18n="stepThree">퀴즈를 풀며 읽기와 뜻을 확인해요.</li></ol>
+        </section>
+        <section class="stores" id="stores" aria-labelledby="store-title">
+          <h2 id="store-title" data-i18n="storeTitle">모바일에서도 만나요.</h2>
+          <p data-i18n="storeDescription">모바일 버전을 준비하고 있어요. 출시 후 이곳에서 스토어로 이동할 수 있습니다.</p>
+          <div class="store-list"><div class="store-link" data-store="app_store"><span>App Store</span><span class="store-state" data-i18n="comingSoon">출시 예정</span></div><div class="store-link" data-store="google_play"><span>Google Play</span><span class="store-state" data-i18n="comingSoon">출시 예정</span></div></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+  <footer><span>© Goddinner · HanjaDefense</span><span data-i18n="saveNote">이어하기는 같은 브라우저에서 이용할 수 있어요.</span></footer>
+  <script>
+  (() => {
+    'use strict';
+    const locale = (navigator.language || 'en').slice(0,2);
+    const translations = {
+      ko: {skip:'게임으로 바로 가기',navigation:'페이지 메뉴',playNav:'플레이',storeNav:'스토어',genre:'한자 합성 · 타워 디펜스',title:'한자를 합치고,\n길을 지켜요.',lead:'작은 한자들이 만나 새로운 힘이 됩니다. 타워를 배치하고 합성하며 30웨이브를 막아 보세요.',recipe:'날 일과 달 월을 합쳐 밝을 명',scope:'한국어 8급 · 일본어 N5 데모',quiz:'합성 퀴즈로 읽기와 뜻을 익혀요',free:'설치 없이 브라우저에서 플레이',player:'플레이 가능한 웹 데모',demoMode:'일반 난이도 · 30웨이브',playNote:'화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.',howTitle:'한 글자씩, 더 강하게.',stepOne:'손에 든 한자를 맵에 배치해 몰려오는 적을 막아요.',stepTwo:'한자를 합성해 새로운 타워를 만들어요.',stepThree:'퀴즈를 풀며 읽기와 뜻을 확인해요.',storeTitle:'모바일에서도 만나요.',storeDescription:'모바일 버전을 준비하고 있어요. 출시 후 이곳에서 스토어로 이동할 수 있습니다.',comingSoon:'출시 예정',available:'스토어 보기',availableDescription:'아래 스토어에서 모바일 버전을 만나보세요.',saveNote:'이어하기는 같은 브라우저에서 이용할 수 있어요.',pageTitle:'한자디펜스 — 브라우저에서 플레이',frameTitle:'한자디펜스 웹 데모'},
+      ja: {skip:'ゲームへ移動',navigation:'ページメニュー',playNav:'プレイ',storeNav:'ストア',genre:'漢字合成 · タワーディフェンス',title:'漢字を合わせて、\n道を守ろう。',lead:'小さな漢字が、新しい力に。タワーを配置・合成して、30ウェーブの敵を迎え撃ちましょう。',recipe:'日と月を合わせて明',scope:'韓国語8級 · 日本語N5デモ',quiz:'合成クイズで読みと意味を学ぼう',free:'インストール不要でプレイ',player:'プレイ可能なWebデモ',demoMode:'標準難易度 · 30ウェーブ',playNote:'画面内の「デモを開始」を押すとプレイできます。',howTitle:'一文字ずつ、強くなる。',stepOne:'手札の漢字をマップに置いて、敵を迎え撃ちます。',stepTwo:'漢字を合成して、新しいタワーを作ります。',stepThree:'クイズで読みと意味を確かめましょう。',storeTitle:'モバイル版も準備中。',storeDescription:'モバイル版のリリース後、こちらからストアへ移動できます。',comingSoon:'近日公開',available:'ストアへ',availableDescription:'モバイル版は以下のストアでご覧いただけます。',saveNote:'続きからのプレイには同じブラウザーをご利用ください。',pageTitle:'HanjaDefense — ブラウザーでプレイ',frameTitle:'HanjaDefense Webデモ'},
+      en: {skip:'Skip to game',navigation:'Page navigation',playNav:'Play',storeNav:'Stores',genre:'Character synthesis · Tower defense',title:'Combine characters.\nDefend the path.',lead:'Small characters become new powers. Place and combine your towers to hold off 30 waves of enemies.',recipe:'Sun 日 and moon 月 combine into bright 明',scope:'Korean Grade 8 · Japanese N5 demo',quiz:'Learn readings and meanings through synthesis quizzes',free:'Play in your browser, no installation',player:'Playable web demo',demoMode:'Normal difficulty · 30 waves',playNote:'Choose “Start demo” inside the game to play.',howTitle:'Build your next character.',stepOne:'Place characters from your hand on the map to defend the path.',stepTwo:'Combine characters to create new towers.',stepThree:'Check your readings and meanings with a quiz.',storeTitle:'Coming to mobile.',storeDescription:'The mobile version is in development. Store links will appear here when it launches.',comingSoon:'Coming soon',available:'Visit store',availableDescription:'Find the mobile version in the stores below.',saveNote:'Use the same browser to continue your saved game.',pageTitle:'HanjaDefense — Play in your browser',frameTitle:'HanjaDefense web demo'}
+    };
+    const text = translations[locale] || translations.en;
+    document.documentElement.lang = translations[locale] ? locale : 'en';
+    document.title = text.pageTitle;
+    document.querySelector('meta[name="description"]').content = text.lead;
+    for (const node of document.querySelectorAll('[data-i18n]')) node.textContent = text[node.dataset.i18n];
+    document.getElementById('title').style.whiteSpace = 'pre-line';
+    for (const node of document.querySelectorAll('[data-label]')) node.setAttribute('aria-label',text[node.dataset.label]);
+    document.getElementById('game-frame').title = text.frameTitle;
+    const stores = {"app_store": null, "google_play": null};
+    let available = false;
+    for (const node of document.querySelectorAll('[data-store]')) {
+      const url = stores[node.dataset.store];
+      if (!url) continue;
+      const link = document.createElement('a');
+      link.className = node.className; link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.innerHTML = node.innerHTML; link.querySelector('.store-state').textContent = text.available;
+      node.replaceWith(link); available = true;
+    }
+    if (available) document.querySelector('[data-i18n="storeDescription"]').textContent = text.availableDescription;
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+# HanjaDefense web demo
+
+The introduction page and complete browser game are deployed together to **one Cloudflare Pages project**. Godot runs in the centered iframe. The game is built locally in [hanja-defense](https://github.com/jujinkim/hanja-defense); Cloudflare does not build Godot or recompress the game.
+
+## Cloudflare Pages setup
+
+Connect **jujinkim/hanja-defense-web** using Pages' Git integration:
+
+| Setting | Value |
+| --- | --- |
+| Production branch | `main` |
+| Framework preset | None |
+| Root directory | Repository root |
+| Build command | `node tools/build.cjs` |
+| Build output directory | `public` |
+
+No dependency install or secret is required by the build. It renders the introduction, verifies the committed game files and checks the **20,000,000-byte combined site/game limit**. There is no loading-time acceptance target. The current 13-file package is 16,422,920 bytes. Whole engine/PCK files use Brotli quality 6; `public/_headers` must be preserved for browser-native decoding.
+
+This repository is prepared for Git deployment. Creating the submodule/pushing these files does not configure a Cloudflare project or domain. Once the repository is connected, pushes to `main` deploy the site. [Cloudflare Git integration](https://developers.cloudflare.com/pages/get-started/git-integration/).
+
+## Editing the introduction
+
+- Edit `src/landing.html` for the Korean/Japanese/English introduction and layout.
+- Edit `site.json` for official App Store/Google Play URLs. `null` displays coming soon.
+- Run `node tools/build.cjs`, then commit/push this repository.
+- When working in the parent game's `site/` folder, also commit/push the updated submodule pointer in the parent repository.
+
+The renderer leaves all game files unchanged. `public/index.html` is generated from the template; edit the template so the next build preserves your change. `game-package.json` records the last locally verified game package; its initial index hash is historical after a website-only edit, while all other file hashes remain enforced.
+
+## Updating the game
+
+From the parent game checkout, build the web export locally, then package into a fresh artifact folder with `tools/package_web.py --update-site`. Use a clean site checkout so this operation cannot overwrite uncommitted edits. The command verifies the package and replaces only `public/` and `game-package.json`; it never commits or pushes. It preserves the authoring files and removes obsolete game assets from the active public folder.
+
+Example from the parent (supply the current complete game commit SHA and a new release label/output path):
+
+```sh
+rtk proxy python3 tools/export.py web-demo
+rtk proxy python3 tools/package_web.py --source artifacts/web-demo --output artifacts/site-update-v0.1.1/public --release web-demo-v0.1.1 --commit <GAME_COMMIT_SHA> --update-site
+rtk proxy node site/tools/build.cjs
+rtk proxy git -C site add public game-package.json
+rtk proxy git -C site commit -m 'Update the web demo game'
+rtk proxy git -C site push origin main
+rtk proxy git add site
+rtk proxy git commit -m 'Update the web demo site revision'
+rtk proxy git push origin main
+```
+
+Set `NODE_BIN` or pass the packager's `--node` if Node is not on PATH. After relevant local checks, commit/push the site first so the parent's submodule reference is remotely available. The parent game source, full paid catalog, build logs, local TLS keys and credentials do not belong in this repository. `.gdignore` prevents the website/binaries from being imported into the parent Godot project.
+
+## Verification and provenance
+
+`node --test tools/build.test.cjs` covers website-only updates, game integrity, extra-file rejection, the combined budget and safe official store links. The parent packager also validates encoded/decoded binary hashes, source notices and the exact public allowlist as part of its existing build/audit process.
+
+The initial public folder is byte-for-byte the accepted WEB-LANDING candidate, including its unchanged audited WEB-10R game runtime. See the parent repository's `docs/evidence/WEB-LANDING.json` and `docs/evidence/WEB-LAN.json`. Package metadata records the original working-tree provenance; it is not a newly exported or tagged game release. Earlier browser startup/audio/fullscreen/layout evidence is retained. Physical mobile/Safari and human playtesting remain unverified.
+
+Game and artwork copyrights remain with their respective owners. Third-party engine, font and data notices are included in the game distribution and credits; this repository adds no license grant for the game or artwork.
