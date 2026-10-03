@@ -5,15 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#29252b">
   <title>Kanji Tower Defense · Web Demo</title>
-  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.icon.png" />
-<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.apple-touch-icon.png"/>
-
+    <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.icon.png" />
+<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.apple-touch-icon.png"/>
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #29252b; color: #fff5df; font: 16px system-ui, sans-serif; }
     #canvas { position: fixed; display: block; touch-action: none; outline: none; }
     #toolbar { position: fixed; z-index: 2; inset: 0 0 auto; height: calc(44px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left)); display: flex; align-items: center; gap: 10px; background: #29252b; font-size: 12px; }
-    #toolbar span { flex: 1; }
+    #game-brand { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    #back { color:inherit; min-height:44px; display:flex; align-items:center; white-space:nowrap; }
+    #fullscreen-status { position:fixed; z-index:4; top:calc(44px + env(safe-area-inset-top)); left:max(8px,env(safe-area-inset-left)); right:max(8px,env(safe-area-inset-right)); margin:0; padding:8px; background:#563a18; font-size:12px; pointer-events:none; }
+    a:focus-visible { outline:3px solid white; }
     button { min-height: 44px; padding: 8px 18px; border: 1px solid #ead4a1; border-radius: 6px; background: #e6bd60; color: #211e25; font: inherit; cursor: pointer; }
     button:focus-visible { outline: 3px solid white; outline-offset: -3px; }
     button:disabled { opacity: .6; cursor: wait; }
@@ -33,18 +35,19 @@
 </head>
 <body>
   <canvas id="canvas" tabindex="0" aria-label="Kanji Tower Defense"></canvas>
-  <div id="toolbar"><span id="game-brand">Kanji Tower Defense · Demo</span><button id="fullscreen" type="button">Fullscreen</button></div>
+  <div id="toolbar"><a id="back" href="./" hidden>Introduction</a><span id="game-brand">Kanji Tower Defense · Demo</span><button id="fullscreen" type="button">Fullscreen</button></div>
+  <p id="fullscreen-status" role="status" hidden></p>
   <p id="storage" role="status" hidden></p><div id="insets"></div>
   <div id="overlay"><main id="card">
-    <img id="icon" src="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.icon.png" alt="">
+    <img id="icon" src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.icon.png" alt="">
     <h1 id="game-title">Kanji Tower Defense</h1><p id="description"></p>
     <p id="status" role="status" aria-live="polite"></p>
     <p id="progress-detail" aria-hidden="true" hidden></p><progress id="progress" aria-labelledby="status" hidden></progress>
     <button id="start" type="button">Start demo</button>
   </main></div>
-  <script src="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/diagnostics.js"></script>
-  <script src="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/manifest.json" data-sha256="7bc0868250e2be3a7e6391e9b11db6243668b9b9fc29d371882ec38353b1ba67"></script>
-  <script src="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
+  <script src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/diagnostics.js"></script>
+  <script src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/manifest.json" data-sha256="751505d1441746ccfb6aa9ca9a5a75673a4f207d7f9fdd4b6ec5c50cc6ffe819"></script>
+  <script src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
   <script>
   (() => {
     'use strict';
@@ -71,7 +74,12 @@
     const progressDetail = document.getElementById('progress-detail');
     const storage = document.getElementById('storage'), fullscreen = document.getElementById('fullscreen');
     start.textContent = strings[0]; document.getElementById('description').textContent = strings[1]; fullscreen.textContent = strings[5];
-    let lifecycle = null, failed = false;
+    const dedicated = window.self === window.top;
+    const autoFullscreen = dedicated && matchMedia('(pointer: coarse)').matches;
+    const back = document.getElementById('back');
+    back.hidden = !dedicated;
+    back.textContent = {ko:'소개로',ja:'紹介へ',en:'Introduction'}[document.documentElement.lang];
+    let lifecycle = null, lifecycleHidden = null, leaving = false, failed = false;
     // Godot policy 0: this shell owns both CSS pixels and the backing buffer.
     function layoutCanvas() {
       const insets = getComputedStyle(document.getElementById('insets'));
@@ -106,9 +114,14 @@
     }
     watchDensity();
     layoutCanvas();
-    const visibility = () => { if (lifecycle) lifecycle(document.hidden); if (document.hidden && window.speechSynthesis) window.speechSynthesis.cancel(); };
+    function notifyLifecycle(hidden) {
+      if (lifecycle && lifecycleHidden !== hidden) { lifecycleHidden = hidden; lifecycle(hidden); }
+      if (hidden && window.speechSynthesis) window.speechSynthesis.cancel();
+    }
+    const visibility = () => notifyLifecycle(leaving || document.hidden);
+    const leave = () => { leaving = true; notifyLifecycle(true); };
     window.HanjaShell = Object.freeze({
-      setLifecycle(callback) { lifecycle = callback; visibility(); },
+      setLifecycle(callback) { lifecycle = callback; lifecycleHidden = null; visibility(); },
       storageStatus(persistent) { storage.textContent = strings[6]; storage.hidden = !!persistent; layoutCanvas(); },
       safeRect() {
         const rect = canvas.getBoundingClientRect();
@@ -116,17 +129,36 @@
       }
     });
     document.addEventListener('visibilitychange', visibility);
-    window.addEventListener('pagehide', () => { if (lifecycle) lifecycle(true); if (window.speechSynthesis) window.speechSynthesis.cancel(); });
-    window.addEventListener('pageshow', visibility);
-    fullscreen.addEventListener('click', async () => {
-      try {
-        if (document.fullscreenElement) await document.exitFullscreen();
-        else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
-        else throw new Error('unsupported');
-        canvas.focus();
-      } catch (_) { fullscreen.title = strings[7]; fullscreen.textContent = strings[7]; }
+    window.addEventListener('pagehide', leave);
+    window.addEventListener('pageshow', () => { leaving = false; visibility(); });
+    back.addEventListener('click', event => {
+      if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) leave();
     });
-    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index","experimentalVK":false,"fileSizes":{"index.pck":11001212,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    let fullscreenNoticeTimer = 0;
+    canvas.addEventListener('pointerdown', () => { document.getElementById('fullscreen-status').hidden = true; });
+    async function requestFullscreen() {
+      const notice = document.getElementById('fullscreen-status');
+      clearTimeout(fullscreenNoticeTimer);
+      notice.hidden = true;
+      try {
+        if (!document.fullscreenElement) {
+          if (!document.documentElement.requestFullscreen) throw new Error('unsupported');
+          await document.documentElement.requestFullscreen();
+        }
+      } catch (_) {
+        notice.textContent = {ko:'전체 화면을 사용할 수 없어 현재 화면에서 계속합니다.',ja:'全画面を利用できないため、この画面で続けます。',en:'Fullscreen is unavailable. Play continues in this screen.'}[document.documentElement.lang];
+        notice.hidden = false;
+        // Announce the fallback without leaving a banner over the game controls.
+        fullscreenNoticeTimer = setTimeout(() => { notice.hidden = true; }, 6000);
+      }
+    }
+    fullscreen.addEventListener('click', async () => {
+      if (document.fullscreenElement) {
+        try { await document.exitFullscreen(); } catch (_) { /* Keep the current player. */ }
+      } else await requestFullscreen();
+      canvas.focus();
+    });
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index","experimentalVK":false,"fileSizes":{"index.pck":11001212,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     config.canvasResizePolicy = 0;
     function showStage(stage) {
       status.textContent = loading[stage] || strings[2];
@@ -150,6 +182,8 @@
     start.addEventListener('click', async () => {
       if (failed) { location.reload(); return; }
       start.disabled = true; showStage('manifest'); progress.hidden = false;
+      // Invoke synchronously within the Start gesture, before any network await.
+      if (autoFullscreen) void requestFullscreen();
       try {
         const missing = Engine.getMissingFeatures({threads:false});
         if (missing.length) throw new Error(missing.join(', '));
@@ -167,4 +201,3 @@
   </script>
 </body>
 </html>
-

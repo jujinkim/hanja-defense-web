@@ -1,91 +1,91 @@
 {
   "schema": 5,
-  "release": "web-demo-v0.1.0-mob03",
+  "release": "web-demo-v0.1.0-mob04",
   "commit": "21fb346a1f6e70d970a81655f338ca1585eb7f98",
-  "version": "web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4",
+  "version": "web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49",
   "compression": {
     "encoding": "br",
     "quality": 6,
     "delivery": "application"
   },
   "player": "play.html",
-  "manifest": "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/manifest.json",
+  "manifest": "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/manifest.json",
   "public_files": {
     "_headers": {
       "bytes": 354,
       "sha256": "058baea1a2e5b91b95d35dcc1a734f53a9ed813692a8f3c63f1b1415b18f2222"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/brotli/LICENSE-MIT.txt": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/brotli/LICENSE-MIT.txt": {
       "bytes": 1056,
       "sha256": "cedae18dc6e1cc4147d927a03a750a4924b7319932ed826e5dacf24f99b06a4c"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/brotli/PROVENANCE.json": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/brotli/PROVENANCE.json": {
       "bytes": 675,
       "sha256": "93c304e6c95584a54e7a17af8001814f0a79090e8451a42c915bb1035b5249c4"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/brotli/brotli_dec_wasm.js": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/brotli/brotli_dec_wasm.js": {
       "bytes": 18769,
       "sha256": "5c51006e7bf046974a46f5da4f1dd4c81b2cace9ee93228a2207272bd7cee5f3"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/brotli/brotli_dec_wasm_bg.wasm": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/brotli/brotli_dec_wasm_bg.wasm": {
       "bytes": 206243,
       "sha256": "7cb4663fd0b11185b88177d0b3b3048136572faf49e81c4c78dccafe37bb68d7"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/brotli-worker.js": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/brotli-worker.js": {
       "bytes": 1846,
       "sha256": "22a00bdf55bbf68820358c342a3d6df2eb3b1cab75609dde6cb75a3157d3a9ac"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/diagnostics.js": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/diagnostics.js": {
       "bytes": 4423,
       "sha256": "903daffe4173a5e54504ff26455ce77cd8f60f7b8b8323513e012a686723afad"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.apple-touch-icon.png": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.apple-touch-icon.png": {
       "bytes": 40114,
       "sha256": "fc43678f8ffca84fac28e791b12851400c4f83e87960f0d05088145b9a531a8c"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.audio.position.worklet.js": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.audio.position.worklet.js": {
       "bytes": 2973,
       "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.audio.worklet.js": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.audio.worklet.js": {
       "bytes": 7298,
       "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.icon.png": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.icon.png": {
       "bytes": 83186,
       "sha256": "fc57012b25e8c001f9124e2aa0062550cfb282c7c5bebc3672ca63e0db9a7a7b"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.js": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.js": {
       "bytes": 279815,
       "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.pck.br": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.pck.br": {
       "bytes": 7785410,
       "sha256": "be319d828b3be6477b59d2ecbd5f3f01437f17fecdb0e32a0ee1db88014f4b82"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.png": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.png": {
       "bytes": 21443,
       "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.wasm.br": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.wasm.br": {
       "bytes": 8182023,
       "sha256": "f54a62cd8eb1841e7c0bc2b83bd14f4a2ac72d67996152e107ca92df0fc0b538"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/manifest.json": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/manifest.json": {
       "bytes": 632,
-      "sha256": "7bc0868250e2be3a7e6391e9b11db6243668b9b9fc29d371882ec38353b1ba67"
+      "sha256": "751505d1441746ccfb6aa9ca9a5a75673a4f207d7f9fdd4b6ec5c50cc6ffe819"
     },
-    "assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/pages-loader.js": {
+    "assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/pages-loader.js": {
       "bytes": 8233,
       "sha256": "a785006103fe3e1a1eee7bfb629f3fad2ec0a273b7a54c185b787b11d227238f"
     },
     "index.html": {
-      "bytes": 15472,
-      "sha256": "6949d719b287a0f349935dbd5c522aff916f020369138a8eb62f7b6608e9a9a5"
+      "bytes": 19739,
+      "sha256": "e3efeac6024496fcb52cf3f535e350254c365c3d62d8e04f8ef218ad701d291d"
     },
     "play.html": {
-      "bytes": 13720,
-      "sha256": "a879a9d02f9b6a352a5a421ddb6e1ee3a41e3bfe0677d59101ecc61efaaa12e0"
+      "bytes": 16018,
+      "sha256": "55ccce59751a71fc001934acaa34734e58531e638c23f7af62d240e24e9bde48"
     }
   }
 }

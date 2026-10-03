@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#191c1a">
   <meta name="description" content="한자를 합쳐 타워를 만들고, 30웨이브의 길을 지켜 보세요. 한자타워디펜스 웹 데모를 브라우저에서 플레이할 수 있습니다.">
   <title>한자타워디펜스 — 브라우저에서 플레이</title>
-  <link rel="icon" href="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.icon.png">
+  <link rel="icon" href="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.icon.png">
   <style>
     :root { color-scheme: dark; --bg:#191c1a; --panel:#222622; --ink:#f4eee0; --muted:#b7bcb0; --gold:#e6bd60; --line:#454b41; }
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; }
-    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    body { padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); margin:0; background:var(--bg); color:var(--ink); font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
     a { color:inherit; }
     a:focus-visible, iframe:focus-visible { outline:3px solid var(--gold); outline-offset:5px; }
     .skip { position:absolute; left:16px; top:-80px; padding:10px 18px; z-index:3; background:var(--gold); color:var(--bg); }
@@ -39,6 +39,12 @@
     .player-label { display:flex; justify-content:space-between; align-items:center; gap:16px; margin:0 0 13px; color:var(--muted); font-size:12px; letter-spacing:.12em; }
     .player-label strong { color:var(--gold); font-weight:500; letter-spacing:.02em; }
     .player { width:100%; aspect-ratio:420/824; overflow:hidden; border:1px solid #8b7951; border-radius:12px; background:#29252b; box-shadow:0 24px 70px #0006; }
+    [hidden] { display:none !important; }
+    #safe-insets { position:fixed; visibility:hidden; pointer-events:none; padding:0 env(safe-area-inset-right) 0 env(safe-area-inset-left); }
+    .player-stage { position:relative; }
+    .scroll-hint { position:absolute; top:50%; width:20px; height:100px; transform:translate(-50%,-50%); color:var(--gold); pointer-events:none; }
+    .dedicated-link { display:block; padding:12px 16px; margin-top:14px; border:1px solid var(--gold); border-radius:6px; text-align:center; text-decoration:none; color:var(--gold); }
+    .player-section[data-mode="dedicated"] .dedicated-link { background:var(--gold); color:var(--bg); }
     iframe { display:block; width:100%; height:100%; border:0; }
     .play-note { margin:14px 0 0; color:var(--muted); font-size:13px; text-align:center; }
     .details { min-width:0; }
@@ -83,9 +89,10 @@
   </style>
 </head>
 <body>
+  <div id="safe-insets" aria-hidden="true"></div>
   <a class="skip" href="#play" data-i18n="skip">게임으로 바로 가기</a>
   <header class="site-header">
-    <div class="brand"><img src="assets/web-demo-v0.1.0-mob03-21fb346a1f6e-3837edbe477620a4/index.icon.png" alt="" width="38" height="38"><span><span data-i18n="gameName">한자타워디펜스</span><small>GODDINNER</small></span></div>
+    <div class="brand"><img src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.icon.png" alt="" width="38" height="38"><span><span data-i18n="gameName">한자타워디펜스</span><small>GODDINNER</small></span></div>
     <nav aria-label="페이지 메뉴" data-label="navigation"><a href="#play" data-i18n="playNav">플레이</a><a href="#stores" data-i18n="storeNav">스토어</a></nav>
   </header>
   <main>
@@ -99,7 +106,11 @@
       </section>
       <section class="player-section" id="play" aria-label="플레이 가능한 웹 데모" data-label="player">
         <div class="player-label"><span>WEB DEMO</span><strong data-i18n="demoMode">일반 난이도 · 30웨이브</strong></div>
-        <div class="player"><iframe id="game-frame" src="play.html" title="한자타워디펜스 웹 데모" allow="fullscreen; autoplay" allowfullscreen></iframe></div>
+        <div class="player-stage"><div class="player" id="player-host" hidden></div>
+          <svg class="scroll-hint" viewBox="0 0 24 120" role="img" data-label="scrollHint" hidden><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v23m-6-17 6-6 6 6M12 94v23m-6-6 6 6 6-6"/><path d="M8 70V43a3 3 0 0 1 6 0v15l3-2 5 4v15c0 8-3 12-9 12-4 0-6-3-8-7L2 68a3 3 0 0 1 5-3l1 5Z"/></g></svg>
+          <svg class="scroll-hint" viewBox="0 0 24 120" role="img" data-label="scrollHint" hidden><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v23m-6-17 6-6 6 6M12 94v23m-6-6 6 6 6-6"/><path d="M8 70V43a3 3 0 0 1 6 0v15l3-2 5 4v15c0 8-3 12-9 12-4 0-6-3-8-7L2 68a3 3 0 0 1 5-3l1 5Z"/></g></svg>
+        </div>
+        <a class="dedicated-link" href="play.html" data-i18n="dedicatedPlay">전용 화면에서 플레이</a>
         <p class="play-note" data-i18n="playNote">화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.</p>
       </section>
       <aside class="details">
@@ -121,9 +132,9 @@
     'use strict';
     const locale = (navigator.language || 'en').slice(0,2);
     const translations = {
-      ko: {gameName:'한자타워디펜스',skip:'게임으로 바로 가기',navigation:'페이지 메뉴',playNav:'플레이',storeNav:'스토어',genre:'한자 합성 · 타워 디펜스',title:'한자를 합치고,\n길을 지켜요.',lead:'작은 한자들이 만나 새로운 힘이 됩니다. 타워를 배치하고 합성하며 30웨이브를 막아 보세요.',recipe:'날 일과 달 월을 합쳐 밝을 명',scope:'한국어 8급 · 일본어 N5 데모',quiz:'합성 퀴즈로 읽기와 뜻을 익혀요',free:'설치 없이 브라우저에서 플레이',player:'플레이 가능한 웹 데모',demoMode:'일반 난이도 · 30웨이브',playNote:'화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.',howTitle:'한 글자씩, 더 강하게.',stepOne:'손에 든 한자를 맵에 배치해 몰려오는 적을 막아요.',stepTwo:'한자를 합성해 새로운 타워를 만들어요.',stepThree:'퀴즈를 풀며 읽기와 뜻을 확인해요.',storeTitle:'모바일에서도 만나요.',storeDescription:'모바일 버전을 준비하고 있어요. 출시 후 이곳에서 스토어로 이동할 수 있습니다.',comingSoon:'출시 예정',available:'스토어 보기',availableDescription:'아래 스토어에서 모바일 버전을 만나보세요.',saveNote:'이어하기는 같은 브라우저에서 이용할 수 있어요.',pageTitle:'한자타워디펜스 — 브라우저에서 플레이',frameTitle:'한자타워디펜스 웹 데모'},
-      ja: {gameName:'漢字タワーディフェンス',skip:'ゲームへ移動',navigation:'ページメニュー',playNav:'プレイ',storeNav:'ストア',genre:'漢字合成 · タワーディフェンス',title:'漢字を合わせて、\n道を守ろう。',lead:'小さな漢字が、新しい力に。タワーを配置・合成して、30ウェーブの敵を迎え撃ちましょう。',recipe:'日と月を合わせて明',scope:'韓国語8級 · 日本語N5デモ',quiz:'合成クイズで読みと意味を学ぼう',free:'インストール不要でプレイ',player:'プレイ可能なWebデモ',demoMode:'標準難易度 · 30ウェーブ',playNote:'画面内の「デモを開始」を押すとプレイできます。',howTitle:'一文字ずつ、強くなる。',stepOne:'手札の漢字をマップに置いて、敵を迎え撃ちます。',stepTwo:'漢字を合成して、新しいタワーを作ります。',stepThree:'クイズで読みと意味を確かめましょう。',storeTitle:'モバイル版も準備中。',storeDescription:'モバイル版のリリース後、こちらからストアへ移動できます。',comingSoon:'近日公開',available:'ストアへ',availableDescription:'モバイル版は以下のストアでご覧いただけます。',saveNote:'続きからのプレイには同じブラウザーをご利用ください。',pageTitle:'漢字タワーディフェンス — ブラウザーでプレイ',frameTitle:'漢字タワーディフェンス Webデモ'},
-      en: {gameName:'Kanji Tower Defense',skip:'Skip to game',navigation:'Page navigation',playNav:'Play',storeNav:'Stores',genre:'Character synthesis · Tower defense',title:'Combine characters.\nDefend the path.',lead:'Small characters become new powers. Place and combine your towers to hold off 30 waves of enemies.',recipe:'Sun 日 and moon 月 combine into bright 明',scope:'Korean Grade 8 · Japanese N5 demo',quiz:'Learn readings and meanings through synthesis quizzes',free:'Play in your browser, no installation',player:'Playable web demo',demoMode:'Normal difficulty · 30 waves',playNote:'Choose “Start demo” inside the game to play.',howTitle:'Build your next character.',stepOne:'Place characters from your hand on the map to defend the path.',stepTwo:'Combine characters to create new towers.',stepThree:'Check your readings and meanings with a quiz.',storeTitle:'Coming to mobile.',storeDescription:'The mobile version is in development. Store links will appear here when it launches.',comingSoon:'Coming soon',available:'Visit store',availableDescription:'Find the mobile version in the stores below.',saveNote:'Use the same browser to continue your saved game.',pageTitle:'Kanji Tower Defense — Play in your browser',frameTitle:'Kanji Tower Defense web demo'}
+      ko: {dedicatedPlay:'전용 화면에서 플레이',dedicatedNote:'전용 화면에서 ‘데모 시작’을 누르면 전체 화면으로 플레이할 수 있어요.',scrollHint:'게임 양옆의 여백을 위아래로 밀어 페이지를 스크롤하세요.',gameName:'한자타워디펜스',skip:'게임으로 바로 가기',navigation:'페이지 메뉴',playNav:'플레이',storeNav:'스토어',genre:'한자 합성 · 타워 디펜스',title:'한자를 합치고,\n길을 지켜요.',lead:'작은 한자들이 만나 새로운 힘이 됩니다. 타워를 배치하고 합성하며 30웨이브를 막아 보세요.',recipe:'날 일과 달 월을 합쳐 밝을 명',scope:'한국어 8급 · 일본어 N5 데모',quiz:'합성 퀴즈로 읽기와 뜻을 익혀요',free:'설치 없이 브라우저에서 플레이',player:'플레이 가능한 웹 데모',demoMode:'일반 난이도 · 30웨이브',playNote:'화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.',howTitle:'한 글자씩, 더 강하게.',stepOne:'손에 든 한자를 맵에 배치해 몰려오는 적을 막아요.',stepTwo:'한자를 합성해 새로운 타워를 만들어요.',stepThree:'퀴즈를 풀며 읽기와 뜻을 확인해요.',storeTitle:'모바일에서도 만나요.',storeDescription:'모바일 버전을 준비하고 있어요. 출시 후 이곳에서 스토어로 이동할 수 있습니다.',comingSoon:'출시 예정',available:'스토어 보기',availableDescription:'아래 스토어에서 모바일 버전을 만나보세요.',saveNote:'이어하기는 같은 브라우저에서 이용할 수 있어요.',pageTitle:'한자타워디펜스 — 브라우저에서 플레이',frameTitle:'한자타워디펜스 웹 데모'},
+      ja: {dedicatedPlay:'専用画面でプレイ',dedicatedNote:'専用画面で「デモを開始」を押すと全画面でプレイできます。',scrollHint:'ゲームの左右の余白を上下にスワイプしてページをスクロールできます。',gameName:'漢字タワーディフェンス',skip:'ゲームへ移動',navigation:'ページメニュー',playNav:'プレイ',storeNav:'ストア',genre:'漢字合成 · タワーディフェンス',title:'漢字を合わせて、\n道を守ろう。',lead:'小さな漢字が、新しい力に。タワーを配置・合成して、30ウェーブの敵を迎え撃ちましょう。',recipe:'日と月を合わせて明',scope:'韓国語8級 · 日本語N5デモ',quiz:'合成クイズで読みと意味を学ぼう',free:'インストール不要でプレイ',player:'プレイ可能なWebデモ',demoMode:'標準難易度 · 30ウェーブ',playNote:'画面内の「デモを開始」を押すとプレイできます。',howTitle:'一文字ずつ、強くなる。',stepOne:'手札の漢字をマップに置いて、敵を迎え撃ちます。',stepTwo:'漢字を合成して、新しいタワーを作ります。',stepThree:'クイズで読みと意味を確かめましょう。',storeTitle:'モバイル版も準備中。',storeDescription:'モバイル版のリリース後、こちらからストアへ移動できます。',comingSoon:'近日公開',available:'ストアへ',availableDescription:'モバイル版は以下のストアでご覧いただけます。',saveNote:'続きからのプレイには同じブラウザーをご利用ください。',pageTitle:'漢字タワーディフェンス — ブラウザーでプレイ',frameTitle:'漢字タワーディフェンス Webデモ'},
+      en: {dedicatedPlay:'Play in a dedicated screen',dedicatedNote:'Choose “Start demo” on the dedicated screen to play in fullscreen.',scrollHint:'Swipe up or down in the margins beside the game to scroll the page.',gameName:'Kanji Tower Defense',skip:'Skip to game',navigation:'Page navigation',playNav:'Play',storeNav:'Stores',genre:'Character synthesis · Tower defense',title:'Combine characters.\nDefend the path.',lead:'Small characters become new powers. Place and combine your towers to hold off 30 waves of enemies.',recipe:'Sun 日 and moon 月 combine into bright 明',scope:'Korean Grade 8 · Japanese N5 demo',quiz:'Learn readings and meanings through synthesis quizzes',free:'Play in your browser, no installation',player:'Playable web demo',demoMode:'Normal difficulty · 30 waves',playNote:'Choose “Start demo” inside the game to play.',howTitle:'Build your next character.',stepOne:'Place characters from your hand on the map to defend the path.',stepTwo:'Combine characters to create new towers.',stepThree:'Check your readings and meanings with a quiz.',storeTitle:'Coming to mobile.',storeDescription:'The mobile version is in development. Store links will appear here when it launches.',comingSoon:'Coming soon',available:'Visit store',availableDescription:'Find the mobile version in the stores below.',saveNote:'Use the same browser to continue your saved game.',pageTitle:'Kanji Tower Defense — Play in your browser',frameTitle:'Kanji Tower Defense web demo'}
     };
     const text = translations[locale] || translations.en;
     document.documentElement.lang = translations[locale] ? locale : 'en';
@@ -132,7 +143,43 @@
     for (const node of document.querySelectorAll('[data-i18n]')) node.textContent = text[node.dataset.i18n];
     document.getElementById('title').style.whiteSpace = 'pre-line';
     for (const node of document.querySelectorAll('[data-label]')) node.setAttribute('aria-label',text[node.dataset.label]);
-    document.getElementById('game-frame').title = text.frameTitle;
+    const mobile = matchMedia('(pointer: coarse)');
+    const host = document.getElementById('player-host');
+    const section = document.getElementById('play');
+    const hints = [...document.querySelectorAll('.scroll-hint')];
+    function space() {
+      const safe = getComputedStyle(document.getElementById('safe-insets'));
+      const left = parseFloat(safe.paddingLeft) || 0, right = parseFloat(safe.paddingRight) || 0;
+      const width = document.documentElement.clientWidth;
+      return {left, right:width-right, margin:(width-left-right-420)/2};
+    }
+    // Decide before creating an iframe: hiding it would still request the game.
+    const dedicated = mobile.matches && space().margin < 24;
+    section.dataset.mode = dedicated ? 'dedicated' : 'embedded';
+    if (dedicated) {
+      for (const link of document.querySelectorAll('a[href="#play"]')) link.href = 'play.html';
+      document.querySelector('[data-i18n="playNote"]').textContent = text.dedicatedNote;
+    } else {
+      const frame = document.createElement('iframe');
+      frame.id = 'game-frame'; frame.title = text.frameTitle;
+      frame.allow = 'fullscreen; autoplay'; frame.allowFullscreen = true;
+      frame.src = 'play.html'; host.hidden = false; host.append(frame);
+    }
+    function layoutHints() {
+      const safe = space(), rect = host.getBoundingClientRect();
+      const show = !dedicated && mobile.matches && safe.margin >= 24 && safe.margin < 64;
+      hints.forEach((hint, index) => {
+        hint.toggleAttribute('hidden', !show);
+        // Relative to the game border, halfway through each safe side margin.
+        hint.style.left = (index ? rect.width+(safe.right-rect.right)/2 : (safe.left-rect.left)/2) + 'px';
+      });
+    }
+    const observer = new ResizeObserver(layoutHints);
+    observer.observe(document.documentElement); observer.observe(host);
+    window.addEventListener('resize', layoutHints);
+    mobile.addEventListener('change', layoutHints);
+    window.visualViewport?.addEventListener('resize', layoutHints);
+    layoutHints();
     const stores = {"app_store": null, "google_play": null};
     let available = false;
     for (const node of document.querySelectorAll('[data-store]')) {
