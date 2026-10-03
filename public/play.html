@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#29252b">
   <title>Kanji Tower Defense · Web Demo</title>
-  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.icon.png" />
-<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.apple-touch-icon.png"/>
+  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.icon.png" />
+<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.apple-touch-icon.png"/>
+
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #29252b; color: #fff5df; font: 16px system-ui, sans-serif; }
@@ -35,14 +36,15 @@
   <div id="toolbar"><span id="game-brand">Kanji Tower Defense · Demo</span><button id="fullscreen" type="button">Fullscreen</button></div>
   <p id="storage" role="status" hidden></p><div id="insets"></div>
   <div id="overlay"><main id="card">
-    <img id="icon" src="assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.icon.png" alt="">
+    <img id="icon" src="assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.icon.png" alt="">
     <h1 id="game-title">Kanji Tower Defense</h1><p id="description"></p>
     <p id="status" role="status" aria-live="polite"></p>
     <p id="progress-detail" aria-hidden="true" hidden></p><progress id="progress" aria-labelledby="status" hidden></progress>
     <button id="start" type="button">Start demo</button>
   </main></div>
-  <script src="assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/manifest.json" data-sha256="ba252c7a9daff32deefb25cc14b8bde748e3ce0deb8c14bfe5f4eafd9537be87"></script>
-  <script src="assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
+  <script src="assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/diagnostics.js"></script>
+  <script src="assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/manifest.json" data-sha256="af7e2f162428fa899f80dff861dc5b1ff3564da0fff69ee3e56f072d5d22ac28"></script>
+  <script src="assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
   <script>
   (() => {
     'use strict';
@@ -124,7 +126,7 @@
         canvas.focus();
       } catch (_) { fullscreen.title = strings[7]; fullscreen.textContent = strings[7]; }
     });
-    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index","experimentalVK":false,"fileSizes":{"index.pck":10991600,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index","experimentalVK":false,"fileSizes":{"index.pck":10997260,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     config.canvasResizePolicy = 0;
     function showStage(stage) {
       status.textContent = loading[stage] || strings[2];
@@ -158,9 +160,11 @@
         else await new Engine(config).startGame(options);
         layoutCanvas();
         overlay.hidden = true; canvas.focus();
+        try { window.HanjaDiagnostics?.mark("shell.overlay_hidden"); } catch (_) {}
       } catch (error) { fail(error); }
     });
   })();
   </script>
 </body>
 </html>
+

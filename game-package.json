@@ -1,87 +1,91 @@
 {
   "schema": 5,
-  "release": "web-demo-v0.1.0-pages",
-  "commit": "ffa6bc01995b7e43e96ac830a228d27f3678ab58",
-  "version": "web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7",
+  "release": "web-demo-v0.1.0-mob01",
+  "commit": "2968c75562ea385be142770da57ce8b42910855d",
+  "version": "web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2",
   "compression": {
     "encoding": "br",
     "quality": 6,
     "delivery": "application"
   },
   "player": "play.html",
-  "manifest": "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/manifest.json",
+  "manifest": "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/manifest.json",
   "public_files": {
     "_headers": {
       "bytes": 354,
       "sha256": "058baea1a2e5b91b95d35dcc1a734f53a9ed813692a8f3c63f1b1415b18f2222"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/brotli/LICENSE-MIT.txt": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/brotli/LICENSE-MIT.txt": {
       "bytes": 1056,
       "sha256": "cedae18dc6e1cc4147d927a03a750a4924b7319932ed826e5dacf24f99b06a4c"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/brotli/PROVENANCE.json": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/brotli/PROVENANCE.json": {
       "bytes": 675,
       "sha256": "93c304e6c95584a54e7a17af8001814f0a79090e8451a42c915bb1035b5249c4"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/brotli/brotli_dec_wasm.js": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/brotli/brotli_dec_wasm.js": {
       "bytes": 18769,
       "sha256": "5c51006e7bf046974a46f5da4f1dd4c81b2cace9ee93228a2207272bd7cee5f3"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/brotli/brotli_dec_wasm_bg.wasm": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/brotli/brotli_dec_wasm_bg.wasm": {
       "bytes": 206243,
       "sha256": "7cb4663fd0b11185b88177d0b3b3048136572faf49e81c4c78dccafe37bb68d7"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/brotli-worker.js": {
-      "bytes": 1495,
-      "sha256": "081489f96d760ba8a2be6a80427600af08ec74cbe33bc67b820160050c368da0"
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/brotli-worker.js": {
+      "bytes": 1846,
+      "sha256": "22a00bdf55bbf68820358c342a3d6df2eb3b1cab75609dde6cb75a3157d3a9ac"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.apple-touch-icon.png": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/diagnostics.js": {
+      "bytes": 4423,
+      "sha256": "903daffe4173a5e54504ff26455ce77cd8f60f7b8b8323513e012a686723afad"
+    },
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.apple-touch-icon.png": {
       "bytes": 40114,
       "sha256": "fc43678f8ffca84fac28e791b12851400c4f83e87960f0d05088145b9a531a8c"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.audio.position.worklet.js": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.audio.position.worklet.js": {
       "bytes": 2973,
       "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.audio.worklet.js": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.audio.worklet.js": {
       "bytes": 7298,
       "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.icon.png": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.icon.png": {
       "bytes": 83186,
       "sha256": "fc57012b25e8c001f9124e2aa0062550cfb282c7c5bebc3672ca63e0db9a7a7b"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.js": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.js": {
       "bytes": 279815,
       "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.pck.br": {
-      "bytes": 7773708,
-      "sha256": "2b658a91bbd82fb45aa5ade2c2985519fc4be8e41152d220df5002adae271d58"
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.pck.br": {
+      "bytes": 7779114,
+      "sha256": "b0973b79a13d202938a3b98ec15da4ba586232809f6914f0d8ce6e1599a807f0"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.png": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.png": {
       "bytes": 21443,
       "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/index.wasm.br": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/index.wasm.br": {
       "bytes": 8182023,
       "sha256": "f54a62cd8eb1841e7c0bc2b83bd14f4a2ac72d67996152e107ca92df0fc0b538"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/manifest.json": {
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/manifest.json": {
       "bytes": 632,
-      "sha256": "ba252c7a9daff32deefb25cc14b8bde748e3ce0deb8c14bfe5f4eafd9537be87"
+      "sha256": "af7e2f162428fa899f80dff861dc5b1ff3564da0fff69ee3e56f072d5d22ac28"
     },
-    "assets/web-demo-v0.1.0-pages-ffa6bc01995b-97100d96004d57a7/pages-loader.js": {
-      "bytes": 6897,
-      "sha256": "0401cffca11195a5c7f07f2885d35ff440ec993f22edc1c99df96046db2d689f"
+    "assets/web-demo-v0.1.0-mob01-2968c75562ea-5b9f6ff88fe5d8f2/pages-loader.js": {
+      "bytes": 8233,
+      "sha256": "a785006103fe3e1a1eee7bfb629f3fad2ec0a273b7a54c185b787b11d227238f"
     },
     "index.html": {
       "bytes": 15472,
-      "sha256": "4c5b1d162bb1d7406304996e8606f6a278dfe708214dfc691e9878071032c40d"
+      "sha256": "d7927b92b5ee5854618fa64805ee908205d4f56bdc83434c2ec303aef9a13807"
     },
     "play.html": {
-      "bytes": 13534,
-      "sha256": "c2abe733afbac1491661bcfd1a37684189ce30987b35b0d700f91304dcde749a"
+      "bytes": 13720,
+      "sha256": "2a29ae493c0e6729c17c50dc33d05d04ce1ea21cefdf91a85cf538d85ee61b98"
     }
   }
 }
