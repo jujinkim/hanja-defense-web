@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#29252b">
   <title>Kanji Tower Defense · Web Demo</title>
-    <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.icon.png" />
-<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.apple-touch-icon.png"/>
+  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/index.icon.png" />
+<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/index.apple-touch-icon.png"/>
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #29252b; color: #fff5df; font: 16px system-ui, sans-serif; }
@@ -39,15 +39,15 @@
   <p id="fullscreen-status" role="status" hidden></p>
   <p id="storage" role="status" hidden></p><div id="insets"></div>
   <div id="overlay"><main id="card">
-    <img id="icon" src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.icon.png" alt="">
+    <img id="icon" src="assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/index.icon.png" alt="">
     <h1 id="game-title">Kanji Tower Defense</h1><p id="description"></p>
     <p id="status" role="status" aria-live="polite"></p>
     <p id="progress-detail" aria-hidden="true" hidden></p><progress id="progress" aria-labelledby="status" hidden></progress>
     <button id="start" type="button">Start demo</button>
   </main></div>
-  <script src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/diagnostics.js"></script>
-  <script src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/manifest.json" data-sha256="751505d1441746ccfb6aa9ca9a5a75673a4f207d7f9fdd4b6ec5c50cc6ffe819"></script>
-  <script src="assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
+  <script src="assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/diagnostics.js"></script>
+  <script src="assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/manifest.json" data-sha256="4253e3eeb7684162b30fc33175558552d2aa3e62f39929a589a2d7977c797fb3"></script>
+  <script src="assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
   <script>
   (() => {
     'use strict';
@@ -96,9 +96,11 @@
       canvas.style.top = (top + (bottom - top - h) / 2) + 'px';
       canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
       // Integer 7:13 buffers avoid tiny internal bars after pixel rounding.
-      const unit = Math.max(1, Math.round(h * (window.devicePixelRatio || 1) / 13));
+      const dpr = window.devicePixelRatio || 1, effectiveDpr = Math.min(dpr, 2);
+      const unit = Math.max(1, Math.round(h * effectiveDpr / 13));
       if (canvas.width !== unit * 7) canvas.width = unit * 7;
       if (canvas.height !== unit * 13) canvas.height = unit * 13;
+      try { window.HanjaDiagnostics?.metadata({dpr, effectiveDpr}); } catch (_) {}
     }
     const observed = new ResizeObserver(layoutCanvas);
     for (const node of [document.documentElement, document.getElementById('toolbar'), storage]) observed.observe(node);
@@ -158,7 +160,7 @@
       } else await requestFullscreen();
       canvas.focus();
     });
-    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-mob04-21fb346a1f6e-44bed7c7a967df49/index","experimentalVK":false,"fileSizes":{"index.pck":11001212,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-mob05-198ce143bf92-a5f264a5a23648f2/index","experimentalVK":false,"fileSizes":{"index.pck":11001212,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     config.canvasResizePolicy = 0;
     function showStage(stage) {
       status.textContent = loading[stage] || strings[2];
