@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#29252b">
-  <title>HanjaDefense · Web Demo</title>
-  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.icon.png" />
-<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.apple-touch-icon.png"/>
+  <title>Kanji Tower Defense · Web Demo</title>
+  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/index.icon.png" />
+<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/index.apple-touch-icon.png"/>
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #29252b; color: #fff5df; font: 16px system-ui, sans-serif; }
@@ -31,18 +31,18 @@
   </style>
 </head>
 <body>
-  <canvas id="canvas" tabindex="0" aria-label="HanjaDefense game"></canvas>
-  <div id="toolbar"><span>HanjaDefense · Demo</span><button id="fullscreen" type="button">Fullscreen</button></div>
+  <canvas id="canvas" tabindex="0" aria-label="Kanji Tower Defense"></canvas>
+  <div id="toolbar"><span id="game-brand">Kanji Tower Defense · Demo</span><button id="fullscreen" type="button">Fullscreen</button></div>
   <p id="storage" role="status" hidden></p><div id="insets"></div>
   <div id="overlay"><main id="card">
-    <img id="icon" src="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.icon.png" alt="">
-    <h1>HanjaDefense</h1><p id="description"></p>
+    <img id="icon" src="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/index.icon.png" alt="">
+    <h1 id="game-title">Kanji Tower Defense</h1><p id="description"></p>
     <p id="status" role="status" aria-live="polite"></p>
     <p id="progress-detail" aria-hidden="true" hidden></p><progress id="progress" aria-labelledby="status" hidden></progress>
     <button id="start" type="button">Start demo</button>
   </main></div>
-  <script src="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/manifest.json" data-sha256="9d573ef0cfd928301d15a649522494534b3514e490dc69266ca64df7f462a5e4"></script>
-  <script src="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
+  <script src="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/manifest.json" data-sha256="5a43a3c0d6af87070932f929ba8bc0a883d28d3a8c39815cbad481a189d94ba3"></script>
+  <script src="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
   <script>
   (() => {
     'use strict';
@@ -59,6 +59,12 @@
       en: {'manifest':'Preparing download…','download-pack':'Downloading game data…','verify-pack':'Checking game files…','download-engine':'Downloading engine…','verify-engine':'Checking engine files…','prepare-engine':'Preparing engine…','start-game':'Starting game…'}
     }[document.documentElement.lang];
     const canvas = document.getElementById('canvas'), overlay = document.getElementById('overlay');
+    const gameName = {ko:'한자타워디펜스',ja:'漢字タワーディフェンス',en:'Kanji Tower Defense'}[document.documentElement.lang];
+    const demoName = {ko:'웹 데모',ja:'Webデモ',en:'Web Demo'}[document.documentElement.lang];
+    document.title = gameName + ' · ' + demoName;
+    document.getElementById('game-title').textContent = gameName;
+    document.getElementById('game-brand').textContent = gameName + ' · ' + demoName;
+    canvas.setAttribute('aria-label', gameName);
     const start = document.getElementById('start'), status = document.getElementById('status'), progress = document.getElementById('progress');
     const progressDetail = document.getElementById('progress-detail');
     const storage = document.getElementById('storage'), fullscreen = document.getElementById('fullscreen');
@@ -118,7 +124,7 @@
         canvas.focus();
       } catch (_) { fullscreen.title = strings[7]; fullscreen.textContent = strings[7]; }
     });
-    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index","experimentalVK":false,"fileSizes":{"index.pck":10991600,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/index","experimentalVK":false,"fileSizes":{"index.pck":10991600,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     config.canvasResizePolicy = 0;
     function showStage(stage) {
       status.textContent = loading[stage] || strings[2];

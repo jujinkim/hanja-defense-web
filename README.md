@@ -1,4 +1,4 @@
-# HanjaDefense web demo
+# Kanji Tower Defense web demo
 
 The introduction page and complete browser game are deployed together to **one Cloudflare Pages project**. Godot runs in the centered iframe. The game is built locally in [hanja-defense](https://github.com/jujinkim/hanja-defense); Cloudflare does not build Godot or recompress the game.
 
@@ -14,9 +14,9 @@ Connect **jujinkim/hanja-defense-web** using Pages' Git integration:
 | Build command | `node tools/build.cjs` |
 | Build output directory | `public` |
 
-No dependency install or secret is required by the build. It renders the introduction, verifies the committed game files and checks the **20,000,000-byte combined site/game limit**. There is no loading-time acceptance target. The current 13-file package is 16,425,365 bytes. Whole engine/PCK files use Brotli quality 6; `public/_headers` must be preserved for browser-native decoding.
+No dependency install or secret is required by the build. It renders the introduction, verifies the committed game files and checks the **20,000,000-byte combined site/game limit**. There is no loading-time acceptance target. The current 13-file package is 16,426,191 bytes. Whole engine/PCK files use Brotli quality 6; `public/_headers` must be preserved for browser-native decoding.
 
-This repository is prepared for Git deployment. Creating the submodule/pushing these files does not configure a Cloudflare project or domain. Once the repository is connected, pushes to `main` deploy the site. [Cloudflare Git integration](https://developers.cloudflare.com/pages/get-started/git-integration/).
+The connected site is live at **https://kanji.goddinner.com/**. Pushes to `main` deploy the committed introduction and game together through Cloudflare Pages. The WEB-LOAD push was verified against the public HTML before this naming update. [Cloudflare Git integration](https://developers.cloudflare.com/pages/get-started/git-integration/).
 
 ## Editing the introduction
 
@@ -58,3 +58,7 @@ Game and artwork copyrights remain with their respective owners. Third-party eng
 ## Loading feedback
 
 The player shows localized download percentage, file verification, engine preparation and game startup. Percentage tracks decoded game/engine bytes; the browser handles Brotli decoding while receiving data. Initialization uses an indeterminate indicator. The update preserves the audited game payload. Loader9/package8/site4 tests and a bounded Chrome loading-to-boot check pass; physical mobile/Safari and human playtesting remain unverified.
+
+## Localized site name
+
+The landing page, metadata, footer, iframe title and player shell use **한자타워디펜스** in Korean, **漢字タワーディフェンス** in Japanese and **Kanji Tower Defense** in English and fallback locales. No parenthesized English is added. This is website wording; the existing Godot game payload and save identity remain unchanged. Site build/tests pass, with Chrome name/overflow checks for Korean/Japanese/English and French fallback, plus inspected Korean narrow and English desktop captures.

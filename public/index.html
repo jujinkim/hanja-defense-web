@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#191c1a">
-  <meta name="description" content="한자를 합쳐 타워를 만들고, 30웨이브의 길을 지켜 보세요. 한자디펜스 웹 데모를 브라우저에서 플레이할 수 있습니다.">
-  <title>한자디펜스 — 브라우저에서 플레이</title>
-  <link rel="icon" href="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.icon.png">
+  <meta name="description" content="한자를 합쳐 타워를 만들고, 30웨이브의 길을 지켜 보세요. 한자타워디펜스 웹 데모를 브라우저에서 플레이할 수 있습니다.">
+  <title>한자타워디펜스 — 브라우저에서 플레이</title>
+  <link rel="icon" href="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/index.icon.png">
   <style>
     :root { color-scheme: dark; --bg:#191c1a; --panel:#222622; --ink:#f4eee0; --muted:#b7bcb0; --gold:#e6bd60; --line:#454b41; }
     * { box-sizing:border-box; }
@@ -85,7 +85,7 @@
 <body>
   <a class="skip" href="#play" data-i18n="skip">게임으로 바로 가기</a>
   <header class="site-header">
-    <div class="brand"><img src="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.icon.png" alt="" width="38" height="38"><span>HANJA DEFENSE<small>GODDINNER</small></span></div>
+    <div class="brand"><img src="assets/web-demo-v0.1.0-name-84276be48868-dc827be67ba17507/index.icon.png" alt="" width="38" height="38"><span><span data-i18n="gameName">한자타워디펜스</span><small>GODDINNER</small></span></div>
     <nav aria-label="페이지 메뉴" data-label="navigation"><a href="#play" data-i18n="playNav">플레이</a><a href="#stores" data-i18n="storeNav">스토어</a></nav>
   </header>
   <main>
@@ -99,7 +99,7 @@
       </section>
       <section class="player-section" id="play" aria-label="플레이 가능한 웹 데모" data-label="player">
         <div class="player-label"><span>WEB DEMO</span><strong data-i18n="demoMode">일반 난이도 · 30웨이브</strong></div>
-        <div class="player"><iframe id="game-frame" src="play.html" title="한자디펜스 웹 데모" allow="fullscreen; autoplay" allowfullscreen></iframe></div>
+        <div class="player"><iframe id="game-frame" src="play.html" title="한자타워디펜스 웹 데모" allow="fullscreen; autoplay" allowfullscreen></iframe></div>
         <p class="play-note" data-i18n="playNote">화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.</p>
       </section>
       <aside class="details">
@@ -115,20 +115,20 @@
       </aside>
     </div>
   </main>
-  <footer><span>© Goddinner · HanjaDefense</span><span data-i18n="saveNote">이어하기는 같은 브라우저에서 이용할 수 있어요.</span></footer>
+  <footer><span>© Goddinner · <span data-i18n="gameName">한자타워디펜스</span></span><span data-i18n="saveNote">이어하기는 같은 브라우저에서 이용할 수 있어요.</span></footer>
   <script>
   (() => {
     'use strict';
     const locale = (navigator.language || 'en').slice(0,2);
     const translations = {
-      ko: {skip:'게임으로 바로 가기',navigation:'페이지 메뉴',playNav:'플레이',storeNav:'스토어',genre:'한자 합성 · 타워 디펜스',title:'한자를 합치고,\n길을 지켜요.',lead:'작은 한자들이 만나 새로운 힘이 됩니다. 타워를 배치하고 합성하며 30웨이브를 막아 보세요.',recipe:'날 일과 달 월을 합쳐 밝을 명',scope:'한국어 8급 · 일본어 N5 데모',quiz:'합성 퀴즈로 읽기와 뜻을 익혀요',free:'설치 없이 브라우저에서 플레이',player:'플레이 가능한 웹 데모',demoMode:'일반 난이도 · 30웨이브',playNote:'화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.',howTitle:'한 글자씩, 더 강하게.',stepOne:'손에 든 한자를 맵에 배치해 몰려오는 적을 막아요.',stepTwo:'한자를 합성해 새로운 타워를 만들어요.',stepThree:'퀴즈를 풀며 읽기와 뜻을 확인해요.',storeTitle:'모바일에서도 만나요.',storeDescription:'모바일 버전을 준비하고 있어요. 출시 후 이곳에서 스토어로 이동할 수 있습니다.',comingSoon:'출시 예정',available:'스토어 보기',availableDescription:'아래 스토어에서 모바일 버전을 만나보세요.',saveNote:'이어하기는 같은 브라우저에서 이용할 수 있어요.',pageTitle:'한자디펜스 — 브라우저에서 플레이',frameTitle:'한자디펜스 웹 데모'},
-      ja: {skip:'ゲームへ移動',navigation:'ページメニュー',playNav:'プレイ',storeNav:'ストア',genre:'漢字合成 · タワーディフェンス',title:'漢字を合わせて、\n道を守ろう。',lead:'小さな漢字が、新しい力に。タワーを配置・合成して、30ウェーブの敵を迎え撃ちましょう。',recipe:'日と月を合わせて明',scope:'韓国語8級 · 日本語N5デモ',quiz:'合成クイズで読みと意味を学ぼう',free:'インストール不要でプレイ',player:'プレイ可能なWebデモ',demoMode:'標準難易度 · 30ウェーブ',playNote:'画面内の「デモを開始」を押すとプレイできます。',howTitle:'一文字ずつ、強くなる。',stepOne:'手札の漢字をマップに置いて、敵を迎え撃ちます。',stepTwo:'漢字を合成して、新しいタワーを作ります。',stepThree:'クイズで読みと意味を確かめましょう。',storeTitle:'モバイル版も準備中。',storeDescription:'モバイル版のリリース後、こちらからストアへ移動できます。',comingSoon:'近日公開',available:'ストアへ',availableDescription:'モバイル版は以下のストアでご覧いただけます。',saveNote:'続きからのプレイには同じブラウザーをご利用ください。',pageTitle:'HanjaDefense — ブラウザーでプレイ',frameTitle:'HanjaDefense Webデモ'},
-      en: {skip:'Skip to game',navigation:'Page navigation',playNav:'Play',storeNav:'Stores',genre:'Character synthesis · Tower defense',title:'Combine characters.\nDefend the path.',lead:'Small characters become new powers. Place and combine your towers to hold off 30 waves of enemies.',recipe:'Sun 日 and moon 月 combine into bright 明',scope:'Korean Grade 8 · Japanese N5 demo',quiz:'Learn readings and meanings through synthesis quizzes',free:'Play in your browser, no installation',player:'Playable web demo',demoMode:'Normal difficulty · 30 waves',playNote:'Choose “Start demo” inside the game to play.',howTitle:'Build your next character.',stepOne:'Place characters from your hand on the map to defend the path.',stepTwo:'Combine characters to create new towers.',stepThree:'Check your readings and meanings with a quiz.',storeTitle:'Coming to mobile.',storeDescription:'The mobile version is in development. Store links will appear here when it launches.',comingSoon:'Coming soon',available:'Visit store',availableDescription:'Find the mobile version in the stores below.',saveNote:'Use the same browser to continue your saved game.',pageTitle:'HanjaDefense — Play in your browser',frameTitle:'HanjaDefense web demo'}
+      ko: {gameName:'한자타워디펜스',skip:'게임으로 바로 가기',navigation:'페이지 메뉴',playNav:'플레이',storeNav:'스토어',genre:'한자 합성 · 타워 디펜스',title:'한자를 합치고,\n길을 지켜요.',lead:'작은 한자들이 만나 새로운 힘이 됩니다. 타워를 배치하고 합성하며 30웨이브를 막아 보세요.',recipe:'날 일과 달 월을 합쳐 밝을 명',scope:'한국어 8급 · 일본어 N5 데모',quiz:'합성 퀴즈로 읽기와 뜻을 익혀요',free:'설치 없이 브라우저에서 플레이',player:'플레이 가능한 웹 데모',demoMode:'일반 난이도 · 30웨이브',playNote:'화면 안의 ‘데모 시작’을 누르면 플레이할 수 있어요.',howTitle:'한 글자씩, 더 강하게.',stepOne:'손에 든 한자를 맵에 배치해 몰려오는 적을 막아요.',stepTwo:'한자를 합성해 새로운 타워를 만들어요.',stepThree:'퀴즈를 풀며 읽기와 뜻을 확인해요.',storeTitle:'모바일에서도 만나요.',storeDescription:'모바일 버전을 준비하고 있어요. 출시 후 이곳에서 스토어로 이동할 수 있습니다.',comingSoon:'출시 예정',available:'스토어 보기',availableDescription:'아래 스토어에서 모바일 버전을 만나보세요.',saveNote:'이어하기는 같은 브라우저에서 이용할 수 있어요.',pageTitle:'한자타워디펜스 — 브라우저에서 플레이',frameTitle:'한자타워디펜스 웹 데모'},
+      ja: {gameName:'漢字タワーディフェンス',skip:'ゲームへ移動',navigation:'ページメニュー',playNav:'プレイ',storeNav:'ストア',genre:'漢字合成 · タワーディフェンス',title:'漢字を合わせて、\n道を守ろう。',lead:'小さな漢字が、新しい力に。タワーを配置・合成して、30ウェーブの敵を迎え撃ちましょう。',recipe:'日と月を合わせて明',scope:'韓国語8級 · 日本語N5デモ',quiz:'合成クイズで読みと意味を学ぼう',free:'インストール不要でプレイ',player:'プレイ可能なWebデモ',demoMode:'標準難易度 · 30ウェーブ',playNote:'画面内の「デモを開始」を押すとプレイできます。',howTitle:'一文字ずつ、強くなる。',stepOne:'手札の漢字をマップに置いて、敵を迎え撃ちます。',stepTwo:'漢字を合成して、新しいタワーを作ります。',stepThree:'クイズで読みと意味を確かめましょう。',storeTitle:'モバイル版も準備中。',storeDescription:'モバイル版のリリース後、こちらからストアへ移動できます。',comingSoon:'近日公開',available:'ストアへ',availableDescription:'モバイル版は以下のストアでご覧いただけます。',saveNote:'続きからのプレイには同じブラウザーをご利用ください。',pageTitle:'漢字タワーディフェンス — ブラウザーでプレイ',frameTitle:'漢字タワーディフェンス Webデモ'},
+      en: {gameName:'Kanji Tower Defense',skip:'Skip to game',navigation:'Page navigation',playNav:'Play',storeNav:'Stores',genre:'Character synthesis · Tower defense',title:'Combine characters.\nDefend the path.',lead:'Small characters become new powers. Place and combine your towers to hold off 30 waves of enemies.',recipe:'Sun 日 and moon 月 combine into bright 明',scope:'Korean Grade 8 · Japanese N5 demo',quiz:'Learn readings and meanings through synthesis quizzes',free:'Play in your browser, no installation',player:'Playable web demo',demoMode:'Normal difficulty · 30 waves',playNote:'Choose “Start demo” inside the game to play.',howTitle:'Build your next character.',stepOne:'Place characters from your hand on the map to defend the path.',stepTwo:'Combine characters to create new towers.',stepThree:'Check your readings and meanings with a quiz.',storeTitle:'Coming to mobile.',storeDescription:'The mobile version is in development. Store links will appear here when it launches.',comingSoon:'Coming soon',available:'Visit store',availableDescription:'Find the mobile version in the stores below.',saveNote:'Use the same browser to continue your saved game.',pageTitle:'Kanji Tower Defense — Play in your browser',frameTitle:'Kanji Tower Defense web demo'}
     };
     const text = translations[locale] || translations.en;
     document.documentElement.lang = translations[locale] ? locale : 'en';
     document.title = text.pageTitle;
-    document.querySelector('meta[name="description"]').content = text.lead;
+    document.querySelector('meta[name="description"]').content = text.gameName + '. ' + text.lead;
     for (const node of document.querySelectorAll('[data-i18n]')) node.textContent = text[node.dataset.i18n];
     document.getElementById('title').style.whiteSpace = 'pre-line';
     for (const node of document.querySelectorAll('[data-label]')) node.setAttribute('aria-label',text[node.dataset.label]);
