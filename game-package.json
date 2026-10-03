@@ -1,66 +1,66 @@
 {
   "schema": 4,
-  "release": "web-demo-v0.1.0-landing",
-  "commit": "9a3a78cfada9e4315887c95412816ad23be85e34",
-  "version": "web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e",
+  "release": "web-demo-v0.1.0-loading",
+  "commit": "0c60cb9db5e53351e40c51c300a6469d41d16d6a",
+  "version": "web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2",
   "compression": {
     "encoding": "br",
     "quality": 6
   },
   "player": "play.html",
-  "manifest": "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/manifest.json",
+  "manifest": "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/manifest.json",
   "public_files": {
     "_headers": {
       "bytes": 377,
       "sha256": "76c05b487b576b64b8a2881405d35913db9c3136dcec144cf32c9a7232a9bae5"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.apple-touch-icon.png": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.apple-touch-icon.png": {
       "bytes": 40114,
       "sha256": "fc43678f8ffca84fac28e791b12851400c4f83e87960f0d05088145b9a531a8c"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.audio.position.worklet.js": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.audio.position.worklet.js": {
       "bytes": 2973,
       "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.audio.worklet.js": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.audio.worklet.js": {
       "bytes": 7298,
       "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.icon.png": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.icon.png": {
       "bytes": 83186,
       "sha256": "fc57012b25e8c001f9124e2aa0062550cfb282c7c5bebc3672ca63e0db9a7a7b"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.js": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.js": {
       "bytes": 279815,
       "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.pck.br": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.pck.br": {
       "bytes": 7773708,
       "sha256": "2b658a91bbd82fb45aa5ade2c2985519fc4be8e41152d220df5002adae271d58"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.png": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.png": {
       "bytes": 21443,
       "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.wasm.br": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.wasm.br": {
       "bytes": 8182023,
       "sha256": "f54a62cd8eb1841e7c0bc2b83bd14f4a2ac72d67996152e107ca92df0fc0b538"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/manifest.json": {
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/manifest.json": {
       "bytes": 609,
-      "sha256": "e05316647e78ee6ace6e760a5e6155c66f1cd81cf0940470ed57462fb7c21cb0"
+      "sha256": "9d573ef0cfd928301d15a649522494534b3514e490dc69266ca64df7f462a5e4"
     },
-    "assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/pages-loader.js": {
-      "bytes": 5281,
-      "sha256": "a6b836acf0135ebf3eb28b2c24e3a997dbc3a1e0633002ef50dfd1f32bfb1639"
+    "assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/pages-loader.js": {
+      "bytes": 5948,
+      "sha256": "0cd3cd407a53162f3a68a7d07b4ae736eeed8a1d88e7cadc68907ee49aabbc12"
     },
     "index.html": {
       "bytes": 15173,
-      "sha256": "fb1f1ed7f5514f3187cdaa5213fe4659f86c459622c6a45488620e8c585ed9df"
+      "sha256": "bba97cc1a10c6bc522bebc56c135c9d18367072673c54b3f4be81010974065da"
     },
     "play.html": {
-      "bytes": 10920,
-      "sha256": "52ac7b1d4fce941f5e3c437b2badfd0cf7bd154fb41fe84a8f8a57e30f69ad61"
+      "bytes": 12698,
+      "sha256": "433f9a00d80e1b85f223181d22684d282e27934b7d9a750ba7c33f8af77bbdad"
     }
   }
 }

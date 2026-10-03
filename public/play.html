@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#29252b">
   <title>HanjaDefense · Web Demo</title>
-  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.icon.png" />
-<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.apple-touch-icon.png"/>
-
+  <link id="-gd-engine-icon" rel="icon" type="image/png" href="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.icon.png" />
+<link rel="apple-touch-icon" href="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.apple-touch-icon.png"/>
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #29252b; color: #fff5df; font: 16px system-ui, sans-serif; }
@@ -25,6 +24,7 @@
     h1 { font-size: 28px; margin-bottom: 8px; }
     p { line-height: 1.5; }
     #status { white-space: pre-wrap; overflow-wrap: anywhere; }
+    #progress-detail { margin: -8px 0 8px; color: #e6bd60; font-variant-numeric: tabular-nums; }
     progress { width: 100%; height: 14px; margin-bottom: 18px; accent-color: #e6bd60; }
     #storage { position: fixed; z-index: 2; left: max(8px,env(safe-area-inset-left)); right: max(8px,env(safe-area-inset-right)); bottom: max(8px,env(safe-area-inset-bottom)); margin: 0; padding: 8px; border-radius: 6px; background: #563a18; font-size: 12px; }
     #insets { position: fixed; visibility: hidden; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
@@ -35,13 +35,14 @@
   <div id="toolbar"><span>HanjaDefense · Demo</span><button id="fullscreen" type="button">Fullscreen</button></div>
   <p id="storage" role="status" hidden></p><div id="insets"></div>
   <div id="overlay"><main id="card">
-    <img id="icon" src="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.icon.png" alt="">
+    <img id="icon" src="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.icon.png" alt="">
     <h1>HanjaDefense</h1><p id="description"></p>
-    <p id="status" role="status" aria-live="polite"></p><progress id="progress" hidden></progress>
+    <p id="status" role="status" aria-live="polite"></p>
+    <p id="progress-detail" aria-hidden="true" hidden></p><progress id="progress" aria-labelledby="status" hidden></progress>
     <button id="start" type="button">Start demo</button>
   </main></div>
-  <script src="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/manifest.json" data-sha256="e05316647e78ee6ace6e760a5e6155c66f1cd81cf0940470ed57462fb7c21cb0"></script>
-  <script src="assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
+  <script src="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/pages-loader.js" data-manifest="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/manifest.json" data-sha256="9d573ef0cfd928301d15a649522494534b3514e490dc69266ca64df7f462a5e4"></script>
+  <script src="assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index.js" integrity="sha256-M8lMsxdfMzO4Lio75ejob3eYbwqiBCsWMfY2ek5btro=" crossorigin="anonymous"></script>
   <script>
   (() => {
     'use strict';
@@ -52,8 +53,14 @@
       en: ['Start demo','Normal difficulty · 30 waves · Synthesis quizzes','Loading…','Could not start. Please retry in an up-to-date browser with WebGL 2 support.','Retry','Fullscreen','Browser storage is unavailable. Refreshing will lose this session’s progress.','Fullscreen is unavailable. Use your browser’s expand controls.']
     }[language] || ['Start demo','Normal difficulty · 30 waves · Synthesis quizzes','Loading…','Could not start. Please retry in an up-to-date browser with WebGL 2 support.','Retry','Fullscreen','Browser storage is unavailable. Refreshing will lose this session’s progress.','Fullscreen is unavailable. Use your browser’s expand controls.'];
     document.documentElement.lang = ['ko','ja'].includes(language) ? language : 'en';
+    const loading = {
+      ko: {'manifest':'다운로드 준비 중…','download-pack':'게임 데이터 받는 중…','verify-pack':'게임 파일 확인 중…','download-engine':'엔진 받는 중…','verify-engine':'엔진 파일 확인 중…','prepare-engine':'엔진 준비 중…','start-game':'게임 시작 중…'},
+      ja: {'manifest':'ダウンロードを準備中…','download-pack':'ゲームデータをダウンロード中…','verify-pack':'ゲームファイルを確認中…','download-engine':'エンジンをダウンロード中…','verify-engine':'エンジンファイルを確認中…','prepare-engine':'エンジンを準備中…','start-game':'ゲームを起動中…'},
+      en: {'manifest':'Preparing download…','download-pack':'Downloading game data…','verify-pack':'Checking game files…','download-engine':'Downloading engine…','verify-engine':'Checking engine files…','prepare-engine':'Preparing engine…','start-game':'Starting game…'}
+    }[document.documentElement.lang];
     const canvas = document.getElementById('canvas'), overlay = document.getElementById('overlay');
     const start = document.getElementById('start'), status = document.getElementById('status'), progress = document.getElementById('progress');
+    const progressDetail = document.getElementById('progress-detail');
     const storage = document.getElementById('storage'), fullscreen = document.getElementById('fullscreen');
     start.textContent = strings[0]; document.getElementById('description').textContent = strings[1]; fullscreen.textContent = strings[5];
     let lifecycle = null, failed = false;
@@ -111,22 +118,36 @@
         canvas.focus();
       } catch (_) { fullscreen.title = strings[7]; fullscreen.textContent = strings[7]; }
     });
-    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-landing-9a3a78cfada9-6b1f62461c93601e/index","experimentalVK":false,"fileSizes":{"index.pck":10991600,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"assets/web-demo-v0.1.0-loading-0c60cb9db5e5-dd29712810a290d2/index","experimentalVK":false,"fileSizes":{"index.pck":10991600,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     config.canvasResizePolicy = 0;
+    function showStage(stage) {
+      status.textContent = loading[stage] || strings[2];
+      progress.removeAttribute('value');
+      progressDetail.hidden = true;
+    }
+    function showProgress(current, total) {
+      if (total > 0) {
+        const loaded = Math.max(0, Math.min(current, total));
+        progress.max = total; progress.value = loaded;
+        progressDetail.textContent = Math.floor(loaded / total * 100) + '%';
+        progressDetail.hidden = false;
+      } else {
+        progress.removeAttribute('value'); progressDetail.hidden = true;
+      }
+    }
     function fail(error) {
       failed = true; overlay.hidden = false; start.disabled = false; start.textContent = strings[4];
-      progress.hidden = true; status.textContent = strings[3]; console.error(error);
+      progress.hidden = true; progressDetail.hidden = true; status.textContent = strings[3]; console.error(error);
     }
     start.addEventListener('click', async () => {
       if (failed) { location.reload(); return; }
-      start.disabled = true; status.textContent = strings[2]; progress.hidden = false;
+      start.disabled = true; showStage('manifest'); progress.hidden = false;
       try {
         const missing = Engine.getMissingFeatures({threads:false});
         if (missing.length) throw new Error(missing.join(', '));
         layoutCanvas();
-        const options = {canvas, onProgress(current,total) {
-          if (total > 0) { progress.max = total; progress.value = current; } else progress.removeAttribute('value');
-        }, onExit(code) { if (code !== 0) fail(new Error('Engine exited: ' + code)); }};
+        const options = {canvas, onProgress:showProgress, onStage:showStage,
+          onExit(code) { if (code !== 0) fail(new Error('Engine exited: ' + code)); }};
         if (window.HanjaPages) await window.HanjaPages.start(config, options);
         else await new Engine(config).startGame(options);
         layoutCanvas();
@@ -137,4 +158,3 @@
   </script>
 </body>
 </html>
-

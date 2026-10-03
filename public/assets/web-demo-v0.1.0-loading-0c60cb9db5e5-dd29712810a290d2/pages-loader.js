@@ -8,7 +8,7 @@
   const MAX_ENCODED_TOTAL = 20000000;
   const hash = async bytes => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
   const validHash = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
-  async function read(url, expectedSize, expectedHash, progress) {
+  async function read(url, expectedSize, expectedHash, progress, verify) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 120000);
     try {
@@ -25,6 +25,7 @@
         buffer.set(value, offset); offset += value.length;
         if (progress) progress(offset);
       }
+      verify();
       if (offset !== expectedSize || await hash(buffer) !== expectedHash) throw Error('Download integrity check failed');
       return buffer;
     } finally { clearTimeout(timer); }
@@ -51,11 +52,13 @@
     if (encodedTotal > MAX_ENCODED_TOTAL) throw Error('Web demo download budget exceeded');
     return result;
   }
-  async function download(file, progress) {
-    return read(new URL(file.path, manifestURL), file.bytes, file.sha256, progress);
+  async function download(file, progress, verify) {
+    return read(new URL(file.path, manifestURL), file.bytes, file.sha256, progress, verify);
   }
   window.HanjaPages = Object.freeze({
     async start(config, options) {
+      const stage = options.onStage || (() => {});
+      stage('manifest');
       const release = await manifest();
       const total = release.files['index.pck'].bytes + release.files['index.wasm'].bytes;
       const progress = options.onProgress || (() => {});
@@ -63,8 +66,12 @@
       const originalFetch = window.fetch;
       let adapter = null;
       try {
-        pack = await download(release.files['index.pck'], loaded => progress(loaded, total));
-        wasm = await download(release.files['index.wasm'], loaded => progress(pack.byteLength + loaded, total));
+        stage('download-pack');
+        progress(0, total);
+        pack = await download(release.files['index.pck'], loaded => progress(loaded, total), () => stage('verify-pack'));
+        stage('download-engine');
+        progress(pack.byteLength, total);
+        wasm = await download(release.files['index.wasm'], loaded => progress(pack.byteLength + loaded, total), () => stage('verify-engine'));
         // Validate before Godot initialization (its instantiation errors may not reject).
         if (!WebAssembly.validate(wasm)) throw Error('Invalid WebAssembly module');
         const wasmURL = new URL(config.executable + '.wasm', document.baseURI).href;
@@ -74,7 +81,11 @@
           return originalFetch.call(window, input, init);
         };
         window.fetch = adapter;
-        engine = new Engine({...config, ...options, onProgress: undefined});
+        stage('prepare-engine');
+        // Give the browser a task boundary before potentially expensive WASM initialization.
+        await new Promise(resolve => setTimeout(resolve, 0));
+        const {onStage, onProgress, ...engineOptions} = options;
+        engine = new Engine({...config, ...engineOptions, onProgress: undefined});
         await engine.preloadFile(pack, 'index.pck');
         pack = null;
         let timeout;
@@ -84,7 +95,9 @@
           })]);
         } finally { clearTimeout(timeout); }
         window.fetch = originalFetch; wasm = null;
-        await engine.start({...options, onProgress: undefined, args: ['--main-pack', 'index.pck', ...(config.args || [])]});
+        stage('start-game');
+        await new Promise(resolve => setTimeout(resolve, 0));
+        await engine.start({...engineOptions, onProgress: undefined, args: ['--main-pack', 'index.pck', ...(config.args || [])]});
       } finally {
         if (adapter && window.fetch === adapter) window.fetch = originalFetch;
         pack = null; wasm = null; engine = null;

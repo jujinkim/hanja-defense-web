@@ -14,7 +14,7 @@ Connect **jujinkim/hanja-defense-web** using Pages' Git integration:
 | Build command | `node tools/build.cjs` |
 | Build output directory | `public` |
 
-No dependency install or secret is required by the build. It renders the introduction, verifies the committed game files and checks the **20,000,000-byte combined site/game limit**. There is no loading-time acceptance target. The current 13-file package is 16,422,920 bytes. Whole engine/PCK files use Brotli quality 6; `public/_headers` must be preserved for browser-native decoding.
+No dependency install or secret is required by the build. It renders the introduction, verifies the committed game files and checks the **20,000,000-byte combined site/game limit**. There is no loading-time acceptance target. The current 13-file package is 16,425,365 bytes. Whole engine/PCK files use Brotli quality 6; `public/_headers` must be preserved for browser-native decoding.
 
 This repository is prepared for Git deployment. Creating the submodule/pushing these files does not configure a Cloudflare project or domain. Once the repository is connected, pushes to `main` deploy the site. [Cloudflare Git integration](https://developers.cloudflare.com/pages/get-started/git-integration/).
 
@@ -54,3 +54,7 @@ Set `NODE_BIN` or pass the packager's `--node` if Node is not on PATH. After rel
 The initial public folder is byte-for-byte the accepted WEB-LANDING candidate, including its unchanged audited WEB-10R game runtime. See the parent repository's `docs/evidence/WEB-LANDING.json` and `docs/evidence/WEB-LAN.json`. Package metadata records the original working-tree provenance; it is not a newly exported or tagged game release. Earlier browser startup/audio/fullscreen/layout evidence is retained. Physical mobile/Safari and human playtesting remain unverified.
 
 Game and artwork copyrights remain with their respective owners. Third-party engine, font and data notices are included in the game distribution and credits; this repository adds no license grant for the game or artwork.
+
+## Loading feedback
+
+The player shows localized download percentage, file verification, engine preparation and game startup. Percentage tracks decoded game/engine bytes; the browser handles Brotli decoding while receiving data. Initialization uses an indeterminate indicator. The update preserves the audited game payload. Loader9/package8/site4 tests and a bounded Chrome loading-to-boot check pass; physical mobile/Safari and human playtesting remain unverified.
