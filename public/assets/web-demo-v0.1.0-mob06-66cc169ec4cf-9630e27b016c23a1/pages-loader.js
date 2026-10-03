@@ -62,20 +62,58 @@
     if (encodedTotal > MAX_ENCODED_TOTAL) throw Error('Web demo download budget exceeded');
     return result;
   }
-  function decode(bytes, expectedSize, parent) {
-    return new Promise((resolve, reject) => {
-      const worker = new Worker(new URL('brotli-worker.js', manifestURL), {type:'module'});
-      const finish = (error, buffer) => { clearTimeout(timer); worker.terminate(); error ? reject(error) : resolve(new Uint8Array(buffer)); };
-      const timer = setTimeout(() => finish(Error('Decompression timed out')), 120000);
-      worker.onmessage = ({data}) => { probe('worker', data.timings, parent); finish(data.error ? Error(data.error) : null, data.buffer); };
-      worker.onerror = () => finish(Error('Could not load the Brotli decoder'));
-      worker.postMessage({buffer:bytes.buffer, expectedSize, diagnostics:!!parent}, [bytes.buffer]);
-    });
+  function createDecoder(stage) {
+    let worker = null, pending = null, serial = 0, closed = false;
+    const settle = (error, buffer) => {
+      if (!pending) return;
+      const request = pending;
+      pending = null;
+      clearTimeout(request.timer);
+      error ? request.reject(error) : request.resolve(new Uint8Array(buffer));
+    };
+    const close = (error = Error('Decoder closed')) => {
+      closed = true;
+      if (worker) {
+        worker.onmessage = worker.onerror = worker.onmessageerror = null;
+        worker.terminate();
+        worker = null;
+      }
+      settle(error);
+    };
+    return {
+      close,
+      decode(bytes, expectedSize, kind, parent) {
+        return new Promise((resolve, reject) => {
+          if (closed || pending) return reject(Error('Decoder unavailable'));
+          const id = ++serial;
+          pending = {id, kind, parent, resolve, reject,
+            timer:setTimeout(() => close(Error('Decompression timed out')), 120000)};
+          try {
+            if (!worker) {
+              worker = new Worker(new URL('brotli-worker.js', manifestURL), {type:'module'});
+              worker.onmessage = ({data}) => {
+                if (!pending || data?.id !== pending.id || data.kind !== pending.kind) return;
+                try {
+                  if (data.stage === 'validate') { stage('verify-' + pending.kind); return; }
+                  probe('worker', data.timings, pending.parent);
+                  if (data.error) return close(Error(data.error));
+                  if (!(data.buffer instanceof ArrayBuffer)) return close(Error('Invalid decoder response'));
+                  settle(null, data.buffer);
+                } catch (error) { close(error); }
+              };
+              worker.onerror = () => close(Error('Could not load the Brotli decoder'));
+              worker.onmessageerror = () => close(Error('Invalid decoder response'));
+            }
+            worker.postMessage({id, kind, buffer:bytes.buffer, expectedSize, diagnostics:!!parent}, [bytes.buffer]);
+          } catch (error) { close(error); }
+        });
+      }
+    };
   }
-  async function download(file, progress, stage, kind, parent) {
+  async function download(file, progress, stage, kind, parent, decoder) {
     const bytes = await read(new URL(file.path, manifestURL), file.encoded_bytes, file.encoded_sha256, progress, () => stage('verify-' + kind), parent, kind);
     stage('decompress-' + kind);
-    const decoded = await measured(kind + '.decompress', parent, id => decode(bytes, file.bytes, id));
+    const decoded = await measured(kind + '.decompress', parent, id => decoder.decode(bytes, file.bytes, kind, id));
     stage('verify-' + kind);
     await measured(kind + '.hash.decoded', parent, async () => {
       if (decoded.byteLength !== file.bytes || await hash(decoded) !== file.sha256) throw Error('Decoded integrity check failed');
@@ -94,16 +132,16 @@
         const progress = options.onProgress || (() => {});
         let pack = null, wasm = null, engine = null;
         const originalFetch = window.fetch;
+        const decoder = createDecoder(stage);
         let adapter = null;
         try {
           stage('download-pack');
           progress(0, total);
-          pack = await download(release.files['index.pck'], loaded => progress(loaded, total), stage, 'pack', root);
+          pack = await download(release.files['index.pck'], loaded => progress(loaded, total), stage, 'pack', root, decoder);
           stage('download-engine');
           progress(packSize, total);
-          wasm = await download(release.files['index.wasm'], loaded => progress(packSize + loaded, total), stage, 'engine', root);
-          // Validate before Godot initialization (its instantiation errors may not reject).
-          await measured('wasm.validate', root, () => { if (!WebAssembly.validate(wasm)) throw Error('Invalid WebAssembly module'); });
+          wasm = await download(release.files['index.wasm'], loaded => progress(packSize + loaded, total), stage, 'engine', root, decoder);
+          decoder.close();
           const wasmURL = new URL(config.executable + '.wasm', document.baseURI).href;
           adapter = function(input, init) {
             const url = new URL(input instanceof Request ? input.url : input, document.baseURI).href;
@@ -129,6 +167,7 @@
           await new Promise(resolve => setTimeout(resolve, 0));
           await measured('engine.start', root, () => engine.start({...engineOptions, onProgress: undefined, args: ['--main-pack', 'index.pck', ...(config.args || [])]}));
         } finally {
+          decoder.close();
           if (adapter && window.fetch === adapter) window.fetch = originalFetch;
           pack = null; wasm = null; engine = null;
         }
