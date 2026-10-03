@@ -2,7 +2,8 @@
 (() => {
   'use strict';
   if (new URLSearchParams(location.search).get('diagnostics') !== '1') return;
-  const LIMIT = 4096, records = [], open = new Map();
+  const LIMIT = 4096, MATERIAL_LIMIT = 128, records = [], open = new Map();
+  let native = {open:0, materialLimit:MATERIAL_LIMIT, materialDropped:0, materials:{}};
   let active = true, serial = 0, dropped = 0, observer, frameRequest, cancelFrames;
   const metadata = {timeOrigin:performance.timeOrigin, userAgent:navigator.userAgent,
     longTasksSupported:typeof PerformanceObserver !== 'undefined' && (PerformanceObserver.supportedEntryTypes || []).includes('longtask')};
@@ -33,7 +34,14 @@
     begin:safe(begin), end:safe(end), mark:safe(mark),
     metadata:safe(value => Object.assign(metadata, value)),
     // Native ticks remain raw; map each flushed batch to the browser clock using its send tick.
-    ingest:safe((rows, sent, lost) => {
+    ingest:safe((rows, sent, lost, state) => {
+      if (!active) return;
+      if (state) {
+        const entries = Object.entries(state.materials || {});
+        const valid = entries.filter(([key])=>key.length<=512);
+        native = {open:state.open, materialLimit:MATERIAL_LIMIT, materialDropped:state.materialDropped + entries.length-Math.min(valid.length,MATERIAL_LIMIT),
+          materials:Object.fromEntries(valid.slice(0,MATERIAL_LIMIT).map(([key,value])=>[key,{...value}]))};
+      }
       const offset = performance.now() - sent; dropped += lost;
       for (const row of rows) put({...row, nativeStart:row.start, nativeEnd:row.end,
         start:row.start + offset, end:row.end == null ? undefined : row.end + offset, hidden:document.hidden});
@@ -62,7 +70,7 @@
       if (cancelFrames) cancelFrames();
       frameRequest = null; cancelFrames = null;
     }),
-    snapshot:safe(() => ({schema:1, metadata:{...metadata}, limit:LIMIT, dropped, open:open.size, records:records.map(row=>({...row}))})),
+    snapshot:safe(() => ({schema:2, native:JSON.parse(JSON.stringify(native)), metadata:{...metadata}, limit:LIMIT, dropped, open:open.size, records:records.map(row=>({...row}))})),
     finish:safe(() => {
       for (const id of [...open.keys()]) end(id, 'cancelled');
       if (observer) observer.disconnect();
