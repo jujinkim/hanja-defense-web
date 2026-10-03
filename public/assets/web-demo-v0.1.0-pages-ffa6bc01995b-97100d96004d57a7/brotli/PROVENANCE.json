@@ -1,0 +1,13 @@
+{
+  "package": "brotli-dec-wasm",
+  "version": "2.3.0",
+  "source": "https://github.com/ustclug-dev/brotli-dec-wasm",
+  "tarball": "https://registry.npmjs.org/brotli-dec-wasm/-/brotli-dec-wasm-2.3.0.tgz",
+  "integrity": "sha512-CNck+1A1ofvHk1oyqsKCuoIHLgD2FYy9KTVGHQlV1AKr/v/7N/Owh62nBKEcJxS3YOk+iwWhCi2rcaLhz9VN5g==",
+  "license": "MIT (selected from MIT OR Apache-2.0)",
+  "files": {
+    "LICENSE-MIT.txt": "cedae18dc6e1cc4147d927a03a750a4924b7319932ed826e5dacf24f99b06a4c",
+    "brotli_dec_wasm.js": "5c51006e7bf046974a46f5da4f1dd4c81b2cace9ee93228a2207272bd7cee5f3",
+    "brotli_dec_wasm_bg.wasm": "7cb4663fd0b11185b88177d0b3b3048136572faf49e81c4c78dccafe37bb68d7"
+  }
+}

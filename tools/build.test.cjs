@@ -16,7 +16,7 @@ function fixture(t) {
   fs.writeFileSync(path.join(root, 'src/landing.html'), template);
   fs.writeFileSync(path.join(root, 'site.json'), JSON.stringify({app_store:null,google_play:null}));
   const files = {'index.html':'previous landing', 'play.html':'game', 'assets/demo/manifest.json':'{}', 'assets/demo/index.wasm.br':'compressed fixture'};
-  const report = {schema:4,player:'play.html',compression:{encoding:'br',quality:6},manifest:'assets/demo/manifest.json',version:'test',public_files:{}};
+  const report = {schema:5,player:'play.html',compression:{encoding:'br',quality:6,delivery:'application'},manifest:'assets/demo/manifest.json',version:'test',public_files:{}};
   for (const [name, bytes] of Object.entries(files)) {
     fs.writeFileSync(path.join(root, 'public', name), bytes);
     report.public_files[name] = {bytes:Buffer.byteLength(bytes),sha256:crypto.createHash('sha256').update(bytes).digest('hex')};

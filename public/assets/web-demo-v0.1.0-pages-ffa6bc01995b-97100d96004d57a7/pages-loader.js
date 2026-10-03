@@ -14,7 +14,6 @@
     try {
       const response = await fetch(url, {signal: controller.signal, cache: 'no-cache', credentials: 'same-origin'});
       if (!response.ok) throw Error('Download failed: ' + response.status);
-      if (response.headers.get('content-encoding') !== 'br') throw Error('Missing Brotli response encoding');
       const reader = response.body.getReader();
       const buffer = new Uint8Array(expectedSize);
       let offset = 0;
@@ -41,7 +40,7 @@
     } finally { clearTimeout(timer); }
     if (bytes.length > 65536 || !validHash(manifestHash) || await hash(bytes) !== manifestHash) throw Error('Release manifest integrity check failed');
     const result = JSON.parse(new TextDecoder().decode(bytes));
-    if (result.schema !== 3 || result.compression?.encoding !== 'br' || result.compression?.quality !== 6 || Object.keys(result.files).sort().join() !== 'index.pck,index.wasm') throw Error('Unsupported release manifest');
+    if (result.schema !== 4 || result.compression?.encoding !== 'br' || result.compression?.quality !== 6 || result.compression?.delivery !== 'application' || Object.keys(result.files).sort().join() !== 'index.pck,index.wasm') throw Error('Unsupported release manifest');
     let encodedTotal = 0;
     for (const name of ['index.pck', 'index.wasm']) {
       const file = result.files[name];
@@ -52,15 +51,31 @@
     if (encodedTotal > MAX_ENCODED_TOTAL) throw Error('Web demo download budget exceeded');
     return result;
   }
-  async function download(file, progress, verify) {
-    return read(new URL(file.path, manifestURL), file.bytes, file.sha256, progress, verify);
+  function decode(bytes, expectedSize) {
+    return new Promise((resolve, reject) => {
+      const worker = new Worker(new URL('brotli-worker.js', manifestURL), {type:'module'});
+      const finish = (error, buffer) => { clearTimeout(timer); worker.terminate(); error ? reject(error) : resolve(new Uint8Array(buffer)); };
+      const timer = setTimeout(() => finish(Error('Decompression timed out')), 120000);
+      worker.onmessage = ({data}) => finish(data.error ? Error(data.error) : null, data.buffer);
+      worker.onerror = () => finish(Error('Could not load the Brotli decoder'));
+      worker.postMessage({buffer:bytes.buffer, expectedSize}, [bytes.buffer]);
+    });
+  }
+  async function download(file, progress, stage, kind) {
+    const bytes = await read(new URL(file.path, manifestURL), file.encoded_bytes, file.encoded_sha256, progress, () => stage('verify-' + kind));
+    stage('decompress-' + kind);
+    const decoded = await decode(bytes, file.bytes);
+    stage('verify-' + kind);
+    if (decoded.byteLength !== file.bytes || await hash(decoded) !== file.sha256) throw Error('Decoded integrity check failed');
+    return decoded;
   }
   window.HanjaPages = Object.freeze({
     async start(config, options) {
       const stage = options.onStage || (() => {});
       stage('manifest');
       const release = await manifest();
-      const total = release.files['index.pck'].bytes + release.files['index.wasm'].bytes;
+      const packSize = release.files['index.pck'].encoded_bytes;
+      const total = packSize + release.files['index.wasm'].encoded_bytes;
       const progress = options.onProgress || (() => {});
       let pack = null, wasm = null, engine = null;
       const originalFetch = window.fetch;
@@ -68,10 +83,10 @@
       try {
         stage('download-pack');
         progress(0, total);
-        pack = await download(release.files['index.pck'], loaded => progress(loaded, total), () => stage('verify-pack'));
+        pack = await download(release.files['index.pck'], loaded => progress(loaded, total), stage, 'pack');
         stage('download-engine');
-        progress(pack.byteLength, total);
-        wasm = await download(release.files['index.wasm'], loaded => progress(pack.byteLength + loaded, total), () => stage('verify-engine'));
+        progress(packSize, total);
+        wasm = await download(release.files['index.wasm'], loaded => progress(packSize + loaded, total), stage, 'engine');
         // Validate before Godot initialization (its instantiation errors may not reject).
         if (!WebAssembly.validate(wasm)) throw Error('Invalid WebAssembly module');
         const wasmURL = new URL(config.executable + '.wasm', document.baseURI).href;

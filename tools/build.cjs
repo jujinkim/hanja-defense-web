@@ -9,7 +9,7 @@ const BUDGET = 20_000_000;
 function build(root = path.resolve(__dirname, '..')) {
   const publicRoot = path.join(root, 'public');
   const report = JSON.parse(fs.readFileSync(path.join(root, 'game-package.json'), 'utf8'));
-  if (report.schema !== 4 || report.player !== 'play.html' || report.compression.encoding !== 'br' || report.compression.quality !== 6) {
+  if (report.schema !== 5 || report.player !== 'play.html' || report.compression.encoding !== 'br' || report.compression.quality !== 6 || report.compression.delivery !== 'application') {
     throw new Error('Unsupported game package');
   }
   const prefix = path.posix.dirname(report.manifest);
