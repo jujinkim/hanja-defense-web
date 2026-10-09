@@ -1,68 +1,55 @@
 # Kanji Tower Defense web demo
 
-The introduction page and complete browser game are deployed together to **one Cloudflare Pages project**. Godot runs in the centered iframe. The game is built locally in [hanja-defense](https://github.com/jujinkim/hanja-defense); Cloudflare does not build Godot or recompress the game.
+This repository owns the introduction and complete browser package for [kanji.goddinner.com](https://kanji.goddinner.com/). The game is exported locally from [hanja-defense](https://github.com/jujinkim/hanja-defense); Cloudflare renders the introduction and validates the committed package.
 
-## Cloudflare Pages setup
-
-Connect **jujinkim/hanja-defense-web** using Pages' Git integration:
+## Cloudflare Pages configuration
 
 | Setting | Value |
 | --- | --- |
+| Repository | `jujinkim/hanja-defense-web` |
 | Production branch | `main` |
 | Framework preset | None |
 | Root directory | Repository root |
 | Build command | `node tools/build.cjs` |
 | Build output directory | `public` |
 
-No dependency install or secret is required by the build. It renders the introduction, verifies the committed game files and checks the **20,000,000-byte combined site/game limit**. There is no loading-time acceptance target. The current 18-file package is 16,655,687 bytes. Whole engine/PCK files use Brotli quality 6; `public/_headers` must be preserved. These are application-compressed payloads, decoded in a browser worker; HTTP compression is managed independently by Pages.
+The build needs no dependency install or secret. It checks the **20,000,000-byte combined site/game limit**; there is no loading-time acceptance target. Pushes to `main` trigger Git-connected Pages delivery. Verify the served package before claiming a public update is complete.
 
-The connected site is live at **https://kanji.goddinner.com/**. Pushes to `main` deploy the committed introduction and game together through Cloudflare Pages. The WEB-LOAD push was verified against the public HTML before this naming update. [Cloudflare Git integration](https://developers.cloudflare.com/pages/get-started/git-integration/).
+## Edit the introduction
 
-## Editing the introduction
+Edit [src/landing.html](src/landing.html) for layout/translations and [site.json](site.json) for official store links (`null` means coming soon). From this repository run:
 
-- Edit `src/landing.html` for the Korean/Japanese/English introduction and layout.
-- Edit `site.json` for official App Store/Google Play URLs. `null` displays coming soon.
-- Run `node tools/build.cjs`, then commit/push this repository.
-- When working in the parent game's `site/` folder, also commit/push the updated submodule pointer in the parent repository.
+```sh
+rtk proxy node tools/build.cjs
+rtk proxy node --test tools/build.test.cjs
+```
 
-The renderer leaves all game files unchanged. `public/index.html` is generated from the template; edit the template so the next build preserves your change. `game-package.json` records the last locally verified game package; its initial index hash is historical after a website-only edit, while all other file hashes remain enforced.
+Commit and push the changed template/config and generated output together. [public/index.html](public/index.html) is generated; direct edits will be replaced. The renderer preserves game assets, and the build verifies their hashes and rejects extra files. The package's initial index hash can differ after an introduction-only edit.
 
-## Updating the game
+Site titles are **한자타워디펜스**, **漢字タワーディフェンス** and **Kanji Tower Defense** for Korean, Japanese and English/fallback. These labels are separate from the game's save identity.
 
-From the parent game checkout, build the web export locally, then package into a fresh artifact folder with `tools/package_web.py --update-site`. Use a clean site checkout so this operation cannot overwrite uncommitted edits. The command verifies the package and replaces only `public/` and `game-package.json`; it never commits or pushes. It preserves the authoring files and removes obsolete game assets from the active public folder.
+## Update the game from the parent checkout
 
-Example from the parent (supply the current complete game commit SHA and a new release label/output path):
+Use a clean site checkout and a fresh output folder. Replace `RELEASE` and `FULL_SOURCE_COMMIT` with the intended release label and actual source provenance:
 
 ```sh
 rtk proxy python3 tools/export.py web-demo
-rtk proxy python3 tools/package_web.py --source artifacts/web-demo --output artifacts/site-update-v0.1.1/public --release web-demo-v0.1.1 --commit <GAME_COMMIT_SHA> --update-site
+rtk proxy python3 tools/package_web.py --source artifacts/web-demo --output artifacts/releases/RELEASE/public --release RELEASE --commit FULL_SOURCE_COMMIT --update-site
 rtk proxy node site/tools/build.cjs
-rtk proxy git -C site add public game-package.json
-rtk proxy git -C site commit -m 'Update the web demo game'
-rtk proxy git -C site push origin main
-rtk proxy git add site
-rtk proxy git commit -m 'Update the web demo site revision'
-rtk proxy git push origin main
 ```
 
-Set `NODE_BIN` or pass the packager's `--node` if Node is not on PATH. After relevant local checks, commit/push the site first so the parent's submodule reference is remotely available. The parent game source, full paid catalog, build logs, local TLS keys and credentials do not belong in this repository. `.gdignore` prevents the website/binaries from being imported into the parent Godot project.
+The packager validates the candidate, replaces only `public/` and `game-package.json`, removes obsolete public assets and restores the previous package on failure. It does not commit or push. Commit/push the site first, compare remote `main` with its HEAD, then commit/push the parent's changed submodule pointer and compare that remote. Use new commits for recovery; do not force-push.
 
-## Verification and provenance
+The parent [build and publishing guide](https://github.com/jujinkim/hanja-defense/blob/main/docs/BUILD_GUIDE.md#web-publishing) owns export prerequisites, projection, browser checks and diagnostics. `NODE_BIN` or the packager's `--node` selects an alternate Node executable.
 
-`node --test tools/build.test.cjs` covers website-only updates, game integrity, extra-file rejection, the combined budget and safe official store links. The parent packager also validates encoded/decoded binary hashes, source notices and the exact public allowlist as part of its existing build/audit process.
+## Package integrity and loading
 
-The initial public folder is byte-for-byte the accepted WEB-LANDING candidate, including its unchanged audited WEB-10R game runtime. See the parent repository's `docs/evidence/WEB-LANDING.json` and `docs/evidence/WEB-LAN.json`. Package metadata records the original working-tree provenance; it is not a newly exported or tagged game release. Earlier browser startup/audio/fullscreen/layout evidence is retained. Physical mobile/Safari and human playtesting remain unverified.
+[game-package.json](game-package.json) owns the current release/source identity, version, file inventory and hashes. It describes the committed package, not proof of the latest live deployment. Keep [public/_headers](public/_headers), the versioned binary manifest, decoder license and provenance with the package.
 
-Game and artwork copyrights remain with their respective owners. Third-party engine, font and data notices are included in the game distribution and credits; this repository adds no license grant for the game or artwork.
+Engine/PCK payloads use application-level Brotli quality 6. The pinned `brotli-dec-wasm` 2.3.0 worker checks encoded/decoded sizes and SHA-256 independently of HTTP transport compression. Do not force `Content-Encoding: br` in `_headers`. No Functions, third-party decoder CDN, hosting credentials or parent Godot source are needed by the build.
 
-## Loading feedback
+The player reports download progress and indeterminate verification/decompression/engine startup. Click-to-start supplies user activation for audio/fullscreen; denial remains usable. The fixed portrait game fits safe insets and uses embedded or dedicated play according to available touch margins. Storage is origin-specific; session-only storage warns about refresh loss.
 
-The player shows localized download percentage, file verification, engine preparation and game startup. Percentage tracks downloaded application payload bytes from the manifest. File verification, worker decompression and initialization use an indeterminate indicator. Pages may add its own HTTP compression; the browser removes that transport layer before the worker decodes the packaged Brotli data. The update preserves the audited game payload. Loader9/package8/site4 tests and a bounded Chrome loading-to-boot check pass; physical mobile/Safari and human playtesting remain unverified.
+For site/package changes, select affected build/loader/package tests and bounded browser checks. Documentation-only edits need link and diff checks. Physical mobile/Safari and human playtesting remain unverified where no current evidence exists.
 
-## Localized site name
-
-The landing page, metadata, footer, iframe title and player shell use **한자타워디펜스** in Korean, **漢字タワーディフェンス** in Japanese and **Kanji Tower Defense** in English and fallback locales. No parenthesized English is added. This is website wording; the existing Godot game payload and save identity remain unchanged. Site build/tests pass, with Chrome name/overflow checks for Korean/Japanese/English and French fallback, plus inspected Korean narrow and English desktop captures.
-
-## Cloudflare delivery compatibility
-
-Pages can re-encode already compressed assets when `Content-Encoding: br` is forced in `_headers`. The current package deliberately omits that override, validates the downloaded compressed payload, and decodes it with the pinned `brotli-dec-wasm` 2.3.0 worker before checking the original game hash. Decoder source, MIT license and provenance ship with the static site. Report schema5 / binary manifest4 identify this application-compression contract. No Functions, third-party decoder CDN or hosting credentials are required.
+Game and artwork copyrights remain with their owners. Third-party engine, font and data notices ship with the game and credits; this repository adds no game/artwork license grant. Build logs, private keys, credentials and the parent's full catalog stay outside this repository. `.gdignore` excludes the site from parent Godot imports.
