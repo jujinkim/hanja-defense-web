@@ -62,32 +62,38 @@ test('store links use official HTTPS destinations and cannot escape the script',
 
 // Execute the actual landing script: mode must be chosen before an iframe exists.
 const vm = require('node:vm');
-function landing({width, coarse=true, left=0, right=0, language='ko'}) {
+function landing({width, coarse=true, left=0, right=0, language='ko', saved=null, storageBlocked=false}) {
   const source = fs.readFileSync(path.join(__dirname, '../src/landing.html'), 'utf8');
   assert(!/<iframe\b/i.test(source), 'No parser-created game requests');
   const script = source.match(/<script>([\s\S]*?)<\/script>/)[1].replace('__STORES_JSON__', '{}');
   const listeners = {};
   const node = () => ({style:{},dataset:{},hidden:true,children:[],attributes:new Set(['hidden']),setAttribute(k,v){this[k]=v;},toggleAttribute(k,v){v?this.attributes.add(k):this.attributes.delete(k);},hasAttribute(k){return this.attributes.has(k);},append(n){this.children.push(n);}});
-  const ids = Object.fromEntries(['safe-insets','player-host','play','title'].map(id=>[id,node()]));
+  const ids = Object.fromEntries(['safe-insets','player-host','play','title','site-language'].map(id=>[id,node()]));
+  ids['site-language'].addEventListener = (name,fn) => listeners['picker-'+name]=fn;
   const hints = [node(),node()]; hints.forEach(n=>n.dataset.label='scrollHint');
   const links = [node(),node()]; links.forEach(n=>n.href='#play');
   const note = node(), meta=node(), created=[];
+  note.dataset.i18n='playNote'; ids.title.dataset.i18n='title';
   const root = {clientWidth:width};
   const media = {matches:coarse,addEventListener(){}};
   ids['player-host'].getBoundingClientRect = () => {
     const available=root.clientWidth-left-right, width=Math.min(420,available-48);
     return {left:left+(available-width)/2,right:left+(available+width)/2,width};
   };
-  const document = {documentElement:root,getElementById:id=>ids[id],
+  const document = {documentElement:root,getElementById:id=>ids[id] || created.find(n=>n.id===id),
     querySelector:selector=>selector.startsWith('meta')?meta:note,
-    querySelectorAll:selector=>({'[data-i18n]':[],'[data-label]':hints,'[data-store]':[],'a[href="#play"]':links,'.scroll-hint':hints}[selector]),
+    querySelectorAll:selector=>({'[data-i18n]':[note,ids.title],'[data-label]':hints,'[data-store]':[],'a[href="#play"]':links,'.scroll-hint':hints}[selector]),
     createElement:tag=>{const n=node();n.tag=tag;created.push(n);return n;}};
+  const storage = new Map([['hanja-defense.site.locale',saved]]);
   const context = {document,navigator:{language},matchMedia:()=>media,
+    localStorage:{getItem(key){if(storageBlocked)throw Error('Denied');return storage.get(key);},setItem(key,value){if(storageBlocked)throw Error('Denied');storage.set(key,value);}},
     getComputedStyle:()=>({paddingLeft:left+'px',paddingRight:right+'px'}),
     ResizeObserver:class {observe(){}},
     window:{addEventListener:(name,fn)=>listeners[name]=fn},console};
   vm.runInNewContext(script,context);
-  return {ids,hints,links,created,resize(width){root.clientWidth=width;listeners.resize();}};
+  return {ids,hints,links,created,document,note,meta,storage,
+    select(locale){ids['site-language'].value=locale;listeners['picker-change']();},
+    resize(width){root.clientWidth=width;listeners.resize();}};
 }
 test('touch-primary safe-width thresholds choose dedicated, hints or plain embed', () => {
   for (const [width,mode,hints] of [[467,'dedicated',false],[468,'embedded',true],[547,'embedded',true],[548,'embedded',false]]) {
@@ -130,4 +136,35 @@ test('scroll guidance is localized, static and leaves touch input to the page', 
   const source=fs.readFileSync(path.join(__dirname,'../src/landing.html'),'utf8');
   assert.match(source,/\.scroll-hint\s*\{[^}]*pointer-events:none/);
   assert(!/touchmove|preventDefault|<animate/.test(source));
+});
+
+test('saved site language wins; invalid choices fall back to browser language or English', () => {
+  for (const [language,saved,expected] of [['ko-KR','ja','ja'],['ja-JP',null,'ja'],['en-US','invalid','en'],['fr-FR','constructor','en'],['KO-KR',null,'ko']]) {
+    const result=landing({width:900,language,saved});
+    assert.equal(result.document.documentElement.lang,expected);
+    assert.equal(result.ids['site-language'].value,expected);
+  }
+});
+test('language changes retain the live game frame, update metadata and persist only the site preference', () => {
+  const result=landing({width:900}), frame=result.created[0];
+  const title=result.document.title, frameTitle=frame.title, description=result.meta.content;
+  result.select('ja');
+  assert.equal(result.document.documentElement.lang,'ja');
+  assert.notEqual(result.document.title,title);
+  assert.notEqual(result.meta.content,description);
+  assert.notEqual(frame.title,frameTitle);
+  assert.equal(result.created.length,1);
+  assert.equal(result.ids['player-host'].children[0],frame);
+  assert.equal(frame.src,'play.html');
+  assert.deepEqual([...result.storage],[['hanja-defense.site.locale','ja']]);
+  result.select('invalid');
+  assert.equal(result.document.documentElement.lang,'ja');
+});
+test('blocked storage does not prevent switching or replace mobile dedicated guidance', () => {
+  const result=landing({width:360,language:'ko',storageBlocked:true});
+  result.select('en');
+  assert.equal(result.document.documentElement.lang,'en');
+  assert.equal(result.note.textContent,'Choose “Start demo” on the dedicated screen to play in fullscreen.');
+  assert.equal(result.created.length,0);
+  assert(result.links.every(n=>n.href==='play.html'));
 });

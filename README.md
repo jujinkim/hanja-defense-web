@@ -28,6 +28,8 @@ Commit and push the changed template/config and generated output together. [publ
 
 Site titles are **한자타워디펜스**, **漢字タワーディフェンス** and **Kanji Tower Defense** for Korean, Japanese and English/fallback. These labels are separate from the game's save identity.
 
+The header language selector offers 한국어 / 日本語 / English. A valid explicit choice is saved in `hanja-defense.site.locale`; otherwise the introduction follows the browser's language, with English as the unsupported-language fallback. Switching updates text, page metadata and accessible labels in place without reloading the embedded game. Blocked storage still allows switching for the current visit. Website language and the game's saved UI/study languages are independent. The selector remains visible in a second header row on narrow screens, with a 44px control and keyboard focus styling.
+
 ## Update the game from the parent checkout
 
 Use a clean site checkout and a fresh output folder. Replace `RELEASE` and `FULL_SOURCE_COMMIT` with the intended release label and actual source provenance:
