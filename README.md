@@ -1,6 +1,6 @@
 # Kanji Tower Defense web demo
 
-This repository owns the introduction and complete browser package for [kanji.goddinner.com](https://kanji.goddinner.com/). The game is exported locally from [hanja-defense](https://github.com/jujinkim/hanja-defense); Cloudflare renders the introduction and validates the committed package.
+This repository owns the introduction, character reference and complete browser package for [kanji.goddinner.com](https://kanji.goddinner.com/). The game is exported locally from [hanja-defense](https://github.com/jujinkim/hanja-defense); Cloudflare renders the website pages and validates the committed package.
 
 ## Cloudflare Pages configuration
 
@@ -24,11 +24,19 @@ rtk proxy node tools/build.cjs
 rtk proxy node --test tools/build.test.cjs
 ```
 
-Commit and push the changed template/config and generated output together. [public/index.html](public/index.html) is generated; direct edits will be replaced. The renderer preserves game assets, and the build verifies their hashes and rejects extra files. The package's initial index hash can differ after an introduction-only edit.
+Commit and push the changed template/config and generated output together. [public/index.html](public/index.html) is generated; direct edits will be replaced. The renderer preserves game assets and generated reference data, and the build verifies their hashes and rejects extra files. The package's initial index hash can differ after an introduction-only edit.
 
 Site titles are **한자타워디펜스**, **漢字タワーディフェンス** and **Kanji Tower Defense** for Korean, Japanese and English/fallback. These labels are separate from the game's save identity.
 
 The header language selector offers 한국어 / 日本語 / English. A valid explicit choice is saved in `hanja-defense.site.locale`; otherwise the introduction follows the browser's language, with English as the unsupported-language fallback. Switching updates text, page metadata and accessible labels in place without reloading the embedded game. Blocked storage still allows switching for the current visit. Website language and the game's saved UI/study languages are independent. The selector remains visible in a second header row on narrow screens, with a 44px control and keyboard focus styling.
+
+## Demo character table
+
+[characters.html](public/characters.html) lists learning characters and supporting parts separately, with the game's Korean/Japanese glyphs, readings and meanings. It has text search and shares the website's language preference. The table is rendered into HTML, remains readable without JavaScript and does not load the game runtime.
+
+Edit [src/characters.html](src/characters.html) only for page layout/translations. **Do not maintain a second character list.** The parent's `tools/package_web.py` reads `data/demo_content.json`, `data/catalog.json` and source notices from the actual exported `index.pck`, then generates versioned `demo-content.json` and `content-notices.txt` alongside the game. The package verifier compares this projection back to the decoded PCK; missing readings, altered notices or mismatched data fail packaging. Existing review status is retained in the generated data.
+
+Every new game package regenerates the reference data automatically. `node tools/build.cjs` renders both website pages from that captured data; it also derives the introduction's character count from it. A template-only edit uses the currently deployed game's data, even if the parent working catalog has moved ahead. No parent checkout or Godot is needed in Cloudflare, and the browser only receives the static table. Keep the generated JSON, notices and HTML in the package inventory.
 
 ## Update the game from the parent checkout
 

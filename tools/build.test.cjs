@@ -6,9 +6,11 @@ const os = require('node:os');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const {build} = require('./build.cjs');
-const {render} = require('./render.cjs');
+const {render, renderCharacters} = require('./render.cjs');
 const template = '<img src="__ASSET_PREFIX__/index.icon.png"><script>const stores=__STORES_JSON__;</script>';
-function fixture(t) {
+const referenceTemplate = fs.readFileSync(path.join(__dirname, '../src/characters.html'), 'utf8');
+const referenceData = () => ({schema:1,targets:[{id:'u660e',ko:{glyph:'明',readings:{ko:['명']},meaning:'밝다'},ja:{glyph:'明',readings:{on:['メイ'],kun:['あかるい']},meaning:'明るい'}}],materials:[]});
+function fixture(t, reference=false) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'hanja-site-test-'));
   t.after(() => fs.rmSync(root, {recursive:true, force:true}));
   fs.mkdirSync(path.join(root, 'src'));
@@ -17,6 +19,12 @@ function fixture(t) {
   fs.writeFileSync(path.join(root, 'site.json'), JSON.stringify({app_store:null,google_play:null}));
   const files = {'index.html':'previous landing', 'play.html':'game', 'assets/demo/manifest.json':'{}', 'assets/demo/index.wasm.br':'compressed fixture'};
   const report = {schema:5,player:'play.html',compression:{encoding:'br',quality:6,delivery:'application'},manifest:'assets/demo/manifest.json',version:'test',public_files:{}};
+  if (reference) {
+    fs.writeFileSync(path.join(root,'src/characters.html'),referenceTemplate);
+    files['characters.html']='previous reference';
+    files['assets/demo/demo-content.json']=JSON.stringify(referenceData());
+    report.demo_content='assets/demo/demo-content.json';report.reference='characters.html';
+  }
   for (const [name, bytes] of Object.entries(files)) {
     fs.writeFileSync(path.join(root, 'public', name), bytes);
     report.public_files[name] = {bytes:Buffer.byteLength(bytes),sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
@@ -58,6 +66,33 @@ test('store links use official HTTPS destinations and cannot escape the script',
   const html = render(template, {app_store:'https://apps.apple.com/app/id123?x=</script>',google_play:null}, 'assets/demo');
   assert(html.includes('\\u003c/script>'));
   assert.equal(html.match(/<\/script>/g).length, 1);
+});
+
+test('reference page renders packed data without JS and refreshes with templates only', t => {
+  const root=fixture(t,true),data=path.join(root,'public/assets/demo/demo-content.json');
+  const before=fs.readFileSync(data);build(root);
+  let html=fs.readFileSync(path.join(root,'public/characters.html'),'utf8');
+  assert.match(html,/data-character="u660e"/);assert.match(html,/あかるい/);assert.match(html,/밝다/);
+  assert(!html.includes('__TARGET_ROWS__'));assert(!html.includes('<iframe'));
+  fs.writeFileSync(path.join(root,'src/characters.html'),referenceTemplate.replace('SYNTHESIS DEMO','UPDATED REFERENCE'));
+  build(root);html=fs.readFileSync(path.join(root,'public/characters.html'),'utf8');
+  assert.match(html,/UPDATED REFERENCE/);assert.deepEqual(fs.readFileSync(data),before);
+  fs.writeFileSync(data,JSON.stringify({...referenceData(),materials:[referenceData().targets[0]]}));
+  assert.throws(()=>build(root),/Duplicate|integrity/);
+  assert.equal(fs.readFileSync(path.join(root,'public/characters.html'),'utf8'),html);
+});
+test('catalog text is escaped and cannot inject markup into the reference page', () => {
+  const data=referenceData();data.targets[0].ko.meaning='<img src=x onerror=alert(1)>';
+  const html=renderCharacters(referenceTemplate,data,'assets/demo');
+  assert(!html.includes('<img src=x'));assert(html.includes('&lt;img src=x onerror=alert(1)&gt;'));
+  data.materials=data.targets;assert.throws(()=>renderCharacters(referenceTemplate,data,'assets/demo'),/Duplicate/);
+});
+test('landing scope count follows generated data instead of a copied number', () => {
+  const source=template+'__TARGET_COUNT__',data=referenceData();
+  assert(render(source,{app_store:null,google_play:null},'assets/demo',data).endsWith('1'));
+  data.targets.push({...data.targets[0],id:'other'});
+  assert(render(source,{app_store:null,google_play:null},'assets/demo',data).endsWith('2'));
+  assert.throws(()=>render(source,{app_store:null,google_play:null},'assets/demo'),/count data/);
 });
 
 // Execute the actual landing script: mode must be chosen before an iframe exists.

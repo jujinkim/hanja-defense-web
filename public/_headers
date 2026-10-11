@@ -9,6 +9,10 @@
   Cache-Control: public, no-cache, no-transform
 /play.html
   Cache-Control: public, no-cache, no-transform
+/characters
+  Cache-Control: public, no-cache, no-transform
+/characters.html
+  Cache-Control: public, no-cache, no-transform
 /assets/*
   Cache-Control: public, max-age=31536000, immutable, no-transform
 /assets/*.br

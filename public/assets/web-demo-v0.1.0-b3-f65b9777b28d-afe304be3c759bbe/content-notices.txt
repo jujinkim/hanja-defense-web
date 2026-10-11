@@ -1,0 +1,93 @@
+Unicode 18.0.0 Unihan
+Unicode, Inc.
+https://www.unicode.org/Public/18.0.0/ucd/Unihan.zip
+
+Unicode 원본을 추출·가공했습니다. 한국어는 kHangul 우선, 없으면 kKorean을 변환했습니다. 일본어는 해당 표기의 음독·훈독을 변환했습니다. 영문 정의를 재사용하고 한국어·일본어 뜻을 기계 번역했습니다. 독음 변환과 번역은 미검수 상태입니다.
+
+Unicode原本を抽出・加工しました。韓国語はkHangulを優先し、ない場合はkKoreanを変換しました。日本語は各字形の音訓を変換しました。英語定義を使用し、韓国語・日本語の意味を機械翻訳しました。読みの変換と翻訳は未検証です。
+
+Extracted and processed Unicode data. Korean prefers kHangul, falling back to converted kKorean; Japanese readings use each displayed glyph. English definitions are retained and translated into Korean/Japanese by machine. Conversions and translations have not been independently reviewed.
+
+UNICODE LICENSE V3
+
+COPYRIGHT AND PERMISSION NOTICE
+
+Copyright © 1991-2026 Unicode, Inc.
+
+NOTICE TO USER: Carefully read the following legal agreement. BY
+DOWNLOADING, INSTALLING, COPYING OR OTHERWISE USING DATA FILES, AND/OR
+SOFTWARE, YOU UNEQUIVOCALLY ACCEPT, AND AGREE TO BE BOUND BY, ALL OF THE
+TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE, DO NOT
+DOWNLOAD, INSTALL, COPY, DISTRIBUTE OR USE THE DATA FILES OR SOFTWARE.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of data files and any associated documentation (the "Data Files") or
+software and any associated documentation (the "Software") to deal in the
+Data Files or Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, and/or sell
+copies of the Data Files or Software, and to permit persons to whom the
+Data Files or Software are furnished to do so, provided that either (a)
+this copyright and permission notice appear with all copies of the Data
+Files or Software, or (b) this copyright and permission notice appear in
+associated Documentation.
+
+THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF
+THIRD PARTY RIGHTS.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE
+BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES,
+OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE DATA
+FILES OR SOFTWARE.
+
+Except as contained in this notice, the name of a copyright holder shall
+not be used in advertising or otherwise to promote the sale, use or other
+dealings in these Data Files or Software without prior written
+authorization of the copyright holder.
+
+
+Hanja Defense original visual and game data
+Hanja Defense contributors
+repo://docs/CONTENT_SOURCES.md
+
+시각 조합과 전투 규칙은 프로젝트 자체 제작입니다. 시각 조합은 글자 기원 설명이 아닙니다. 이전 배포물의 라이선스는 유지됩니다.
+
+視覚的な構成と戦闘ルールは本プロジェクトの制作物です。字源の説明ではありません。過去の配布物のライセンスは引き続き有効です。
+
+Visual assemblies and combat rules are authored by this project. They are not etymological claims. Earlier distributions retain their existing licenses.
+
+Yi Bai IDS
+Copyright (c) 2021 Yi Bai
+https://github.com/yi-bai/ids
+
+한국·일본 자형별 시각 구조를 선택하고 2–3개 재료와 깊이 4로 제한했습니다. 어원 설명이 아니며 독립 언어 검수는 미완료입니다.
+
+韓国・日本の字形ごとに視覚構造を選び、材料2〜3個・深さ4以内に変換しました。語源の説明ではなく、独立した言語確認は未完了です。
+
+Selected Korean/Japanese visual structures, converted to 2–3 materials and depth at most four. These are not etymologies; independent language review remains pending.
+
+MIT License
+
+Copyright (c) 2021 Yi Bai
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
