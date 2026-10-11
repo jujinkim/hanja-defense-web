@@ -42,6 +42,8 @@ rtk proxy node site/tools/build.cjs
 
 The packager validates the candidate, replaces only `public/` and `game-package.json`, removes obsolete public assets and restores the previous package on failure. It does not commit or push. Commit/push the site first, compare remote `main` with its HEAD, then commit/push the parent's changed submodule pointer and compare that remote. Use new commits for recovery; do not force-push.
 
+The synthesis demo uses the same 44 study characters in Korean/Japanese, plus three supporting parts. Its course is “합성 체험 · 한자 44자” / “合成体験 · 漢字44字” / “Synthesis demo · 44 characters”. The introduction and game scope are published in the same site update. The parent versioned `data/demo_content.json` owns the selection; existing curriculum and educational-review metadata remain separate.
+
 The parent [build and publishing guide](https://github.com/jujinkim/hanja-defense/blob/main/docs/BUILD_GUIDE.md#web-publishing) owns export prerequisites, projection, browser checks and diagnostics. `NODE_BIN` or the packager's `--node` selects an alternate Node executable.
 
 ## Package integrity and loading
