@@ -203,3 +203,20 @@ test('blocked storage does not prevent switching or replace mobile dedicated gui
   assert.equal(result.created.length,0);
   assert(result.links.every(n=>n.href==='play.html'));
 });
+
+// Reference facts stay separate from shape recipes and retain their source links.
+test('shape recipes cannot manufacture radical or origin facts', () => {
+  const data=referenceData(), entry=data.targets[0];
+  data.knowledge_sources={unicode_radicals:{title:'Unicode',url:'https://www.unicode.org/Public/18.0.0/ucd/CJKRadicals.txt'},cuhk_yin:{title:'CUHK',url:'https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/search.php?word=%E9%9F%B3'}};
+  entry.ko={...entry.ko,glyph:'音',shapes:['立 + 日'],radical_number:'180',origin:{source_id:'cuhk_yin',summary:{ko:'言에서 분화',ja:'言から分化',en:'Developed from 言'}}};
+  let html=renderCharacters(referenceTemplate,data,'assets/demo');
+  assert.match(html,/立 \+ 日/);assert.match(html,/자체 부수/);assert.match(html,/言에서 분화/);
+  assert.match(html,/data-note-locale="en"/);assert.match(html,/href="https:\/\/humanum/);
+  entry.ko.radical_number='';entry.ko.origin={};
+  html=renderCharacters(referenceTemplate,data,'assets/demo');
+  assert(!html.includes('class="facts"><div><span class="fact-label" data-i18n="radical"'));
+  assert(!html.includes('<span data-note-locale="en"'));
+  entry.ko.origin={source_id:'cuhk_yin',summary:{ko:'<script>',ja:'言',en:'言'}};
+  data.knowledge_sources.cuhk_yin.url='javascript:alert(1)';
+  assert.throws(()=>renderCharacters(referenceTemplate,data,'assets/demo'),/unsafe/);
+});

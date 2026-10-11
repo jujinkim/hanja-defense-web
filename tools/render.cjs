@@ -32,6 +32,22 @@ function renderCharacters(template, content, prefix) {
     throw new Error('Invalid demo reference data');
   }
   const ids = new Set();
+  function facts(entry) {
+    const lines = [];
+    if (entry.shapes?.length) lines.push(`<div><span class="fact-label" data-i18n="shape">암기용 모양 조합</span><span>${entry.shapes.map(escape).join(' / ')}</span></div>`);
+    if (entry.radical_number) lines.push(`<div><span class="fact-label" data-i18n="radical">부수</span><span>${escape(entry.glyph)} · <span data-i18n="selfRadical">자체 부수</span></span></div>`);
+    if (entry.origin?.summary) {
+      lines.push(`<div><span class="fact-label" data-i18n="origin">유래</span><span>${['ko','ja','en'].map(locale => `<span data-note-locale="${locale}" lang="${locale}">${escape(entry.origin.summary[locale])}</span>`).join('')}</span></div>`);
+    }
+    const sourceIds = [...(entry.radical_number ? ['unicode_radicals'] : []), ...(entry.origin?.source_id ? [entry.origin.source_id] : [])];
+    const links = sourceIds.map(id => {
+      const source = content.knowledge_sources?.[id];
+      if (!source || new URL(source.url).protocol !== 'https:') throw new Error('Missing or unsafe knowledge source');
+      return `<a href="${escape(source.url)}" title="${escape(source.title)}">${escape(source.label || source.title)}</a>`;
+    });
+    if (links.length) lines.push(`<div class="fact-sources">${links.join(' · ')}</div>`);
+    return lines.length ? `<div class="facts">${lines.join('')}</div>` : '';
+  }
   function row(entry) {
     if (ids.has(entry.id)) throw new Error('Duplicate demo identity');
     ids.add(entry.id);
@@ -43,8 +59,8 @@ function renderCharacters(template, content, prefix) {
     const japanese = (entry.ja.readings.on?.length || entry.ja.readings.kun?.length)
       ? `<span class="reading-label" data-i18n="on">음</span> ${readings(entry.ja.readings.on)}<br><span class="reading-label" data-i18n="kun">훈</span> ${readings(entry.ja.readings.kun)}` : '—';
     return `<tr data-character="${escape(entry.id)}"><th scope="row" class="character"><span lang="ko">${escape(entry.ko.glyph)}</span>${alternate}</th>` +
-      `<td lang="ko"><div class="readings">${readings(entry.ko.readings.ko)}</div><p class="meaning">${escape(entry.ko.meaning)}</p></td>` +
-      `<td lang="ja"><div class="readings">${japanese}</div><p class="meaning">${escape(entry.ja.meaning)}</p></td></tr>`;
+      `<td><div class="readings" lang="ko">${readings(entry.ko.readings.ko)}</div><p class="meaning" lang="ko">${escape(entry.ko.meaning)}</p>${facts(entry.ko)}</td>` +
+      `<td><div class="readings" lang="ja">${japanese}</div><p class="meaning" lang="ja">${escape(entry.ja.meaning)}</p>${facts(entry.ja)}</td></tr>`;
   }
   const replacements = {__ASSET_PREFIX__:prefix, __TARGET_ROWS__:content.targets.map(row).join('\n'),
     __MATERIAL_ROWS__:content.materials.map(row).join('\n'), __TARGET_COUNT__:content.targets.length, __MATERIAL_COUNT__:content.materials.length};
